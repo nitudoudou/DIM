@@ -1,8 +1,8 @@
-import { ReactStateDeclaration } from '@uirouter/react';
+import { RouteConfig } from 'react-router-config';
 import Vendors from './Vendors';
 import SingleVendor from './SingleVendor';
 
-export const states: ReactStateDeclaration[] = [
+export const states: RouteConfig[] = [
   {
     name: 'destiny2.vendors',
     component: Vendors,

@@ -4,7 +4,6 @@ import BungieImage from '../dim-ui/BungieImage';
 import clsx from 'clsx';
 import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { DestinyItemQuantity, DestinyCollectibleState } from 'bungie-api-ts/destiny2';
-import { UISref } from '@uirouter/react';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import ItemPopupTrigger from '../inventory/ItemPopupTrigger';
 import '../progress/milestone.scss';

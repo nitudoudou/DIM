@@ -16,7 +16,6 @@ import idx from 'idx';
 
 interface Props {
   presentationNodeHash: number;
-  openedPresentationHash?: number;
   ownedItemHashes?: Set<number>;
   profileResponse: DestinyProfileResponse;
   buckets?: InventoryBuckets;
@@ -39,7 +38,6 @@ export default class PresentationNodeRoot extends React.Component<Props, State> 
   render() {
     const {
       presentationNodeHash,
-      openedPresentationHash,
       defs,
       buckets,
       profileResponse,
@@ -47,19 +45,6 @@ export default class PresentationNodeRoot extends React.Component<Props, State> 
       showPlugSets
     } = this.props;
     const { nodePath } = this.state;
-
-    let fullNodePath = nodePath;
-    if (nodePath.length === 0 && openedPresentationHash) {
-      let currentHash = openedPresentationHash;
-      fullNodePath = [currentHash];
-      let node = defs.PresentationNode.get(currentHash);
-      while (node.parentNodeHashes.length) {
-        nodePath.unshift(node.parentNodeHashes[0]);
-        currentHash = node.parentNodeHashes[0];
-        node = defs.PresentationNode.get(currentHash);
-      }
-      fullNodePath.unshift(presentationNodeHash);
-    }
 
     const collectionCounts = countCollectibles(defs, presentationNodeHash, profileResponse);
 
@@ -95,7 +80,7 @@ export default class PresentationNodeRoot extends React.Component<Props, State> 
           profileResponse={profileResponse}
           buckets={buckets}
           ownedItemHashes={ownedItemHashes}
-          path={fullNodePath}
+          path={nodePath}
           onNodePathSelected={this.onNodePathSelected}
           parents={[]}
         />

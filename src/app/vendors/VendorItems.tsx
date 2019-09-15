@@ -5,7 +5,6 @@ import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import BungieImage from '../dim-ui/BungieImage';
 import VendorItemComponent from './VendorItemComponent';
 import { VendorItem } from './vendor-item';
-import { UISref } from '@uirouter/react';
 import FactionIcon from '../progress/FactionIcon';
 import PressTip from '../dim-ui/PressTip';
 import { D2Vendor } from './d2-vendors';

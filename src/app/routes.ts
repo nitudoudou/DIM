@@ -1,4 +1,3 @@
-import { ReactStateDeclaration } from '@uirouter/react';
 import { states as destiny1States } from './destiny1/routes.lazy';
 import { states as destiny2States } from './destiny2/routes';
 import { defaultAccountRoute } from './shell/default-account.route';
@@ -10,8 +9,9 @@ import { states as vendorsStates } from './vendors/routes';
 import { states as collectionsStates } from './collections/routes';
 import { states as settingsStates } from './settings/routes';
 import { states as shellStates } from './shell/routes';
+import { RouteConfig } from 'react-router-config';
 
-export const states: ReactStateDeclaration[] = [
+export const routes: RouteConfig[] = [
   defaultAccountRoute,
   ...destiny1States,
   ...destiny2States,

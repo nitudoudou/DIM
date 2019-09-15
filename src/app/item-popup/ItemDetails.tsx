@@ -5,7 +5,6 @@ import BungieImage from '../dim-ui/BungieImage';
 import { settings } from '../settings/settings';
 import EnergyMeter from './EnergyMeter';
 import ItemSockets from './ItemSockets';
-import { UISref } from '@uirouter/react';
 import { ItemPopupExtraInfo } from './item-popup';
 import ItemStats from './ItemStats';
 import ItemObjectives from './ItemObjectives';
@@ -126,9 +125,9 @@ function ItemDetails({ item, extraInfo = {}, defs }: Props) {
 
       {item.isDestiny2() && item.previewVendor !== undefined && item.previewVendor !== 0 && (
         <div className="item-description">
-          <UISref to="destiny2.vendor" params={{ id: item.previewVendor }}>
-            <a>{t('ItemService.PreviewVendor', { type: item.typeName })}</a>
-          </UISref>
+          <Link to={{ pathname: 'destiny2.vendor', search: `?id=${item.previewVendor}` }}>
+            {t('ItemService.PreviewVendor', { type: item.typeName })}
+          </Link>
         </div>
       )}
 

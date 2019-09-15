@@ -1,7 +1,6 @@
 import React from 'react';
 import { t } from 'app/i18next-t';
 import ExternalLink from '../dim-ui/ExternalLink';
-import { Transition, UISref } from '@uirouter/react';
 import logo from '../../images/logo-light.svg';
 import './page.scss';
 import _ from 'lodash';
@@ -33,9 +32,7 @@ const twitterLink = 'https://twitter.com/ThisIsDIM';
 const redditLink = 'https://destinyitemmanager.reddit.com';
 const discordLink = 'https://discord.gg/UK2GWC7';
 
-interface Props {
-  transition: Transition;
-}
+interface Props {}
 export default class About extends React.Component<Props> {
   componentDidMount() {
     const script = document.createElement('script');

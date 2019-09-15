@@ -10,7 +10,6 @@ import { DimStore } from '../inventory/store-types';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { D2StoresService, mergeCollectibles } from '../inventory/d2-stores';
 import { loadingTracker } from '../shell/loading-tracker';
-import { UIViewInjectedProps } from '@uirouter/react';
 import { Loading } from '../dim-ui/Loading';
 import { Subscriptions } from '../utils/rx-utils';
 import { refresh$ } from '../shell/refresh';
@@ -47,7 +46,7 @@ interface State {
   profileResponse?: DestinyProfileResponse;
 }
 
-type Props = ProvidedProps & StoreProps & UIViewInjectedProps & DispatchProp<any>;
+type Props = ProvidedProps & StoreProps & DispatchProp<any>;
 
 /**
  * A page that loads its own info for a single vendor, so we can link to a vendor or show engram previews.

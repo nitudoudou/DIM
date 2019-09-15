@@ -1,15 +1,15 @@
 import React from 'react';
-import { Transition } from '@uirouter/react';
 import { t } from 'app/i18next-t';
 import { oauthClientId } from '../bungie-api/bungie-api-utils';
 import uuidv4 from 'uuid/v4';
 import './login.scss';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 
-export default function Login({ transition }: { transition: Transition }) {
+function Login({ match }: RouteComponentProps<{ reauth: string }>) {
   const authorizationState = uuidv4();
   localStorage.setItem('authorizationState', authorizationState);
   const clientId = oauthClientId();
-  const reauth = transition.params().reauth;
+  const reauth = match.params.reauth;
 
   const isStandalone =
     (window.navigator as any).standalone === true ||
@@ -62,3 +62,5 @@ export default function Login({ transition }: { transition: Transition }) {
     </div>
   );
 }
+
+export default withRouter(Login);

@@ -1,9 +1,9 @@
 import SettingsPage from './SettingsPage';
-import { ReactStateDeclaration } from '@uirouter/react';
+import { RouteConfig } from 'react-router-config';
 import { settingsReady } from './settings';
 import GDriveRevisions from '../storage/GDriveRevisions';
 
-export const states: ReactStateDeclaration[] = [
+export const states: RouteConfig[] = [
   {
     name: 'settings',
     url: '/settings?gdrive',

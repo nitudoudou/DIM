@@ -1,5 +1,4 @@
 import React from 'react';
-import { UIView } from '@uirouter/react';
 import ManifestProgress from './ManifestProgress';
 import { DestinyAccount } from '../accounts/destiny-account';
 import ItemPopupContainer from '../item-popup/ItemPopupContainer';
@@ -11,10 +10,15 @@ import { itemTags } from '../inventory/dim-item-info';
 import { Hotkey } from '../hotkeys/hotkeys';
 import { DispatchProp, connect } from 'react-redux';
 import { loadCurationsFromIndexedDB } from 'app/wishlists/reducer';
+import { renderRoutes, RouteConfig } from 'react-router-config';
+import { getPlatforms } from 'app/accounts/platforms';
 
-interface Props extends DispatchProp {
+interface ProvidedProps {
   account: DestinyAccount;
+  route: RouteConfig;
 }
+
+type Props = ProvidedProps & DispatchProp;
 
 /**
  * Base view for pages that show Destiny content.
@@ -22,6 +26,8 @@ interface Props extends DispatchProp {
 class Destiny extends React.Component<Props> {
   componentDidMount() {
     this.props.dispatch(loadCurationsFromIndexedDB() as any);
+    // TODO: load platforms, depending on destiny version load manifest
+    getPlatforms();
   }
 
   render() {
@@ -52,9 +58,7 @@ class Destiny extends React.Component<Props> {
 
     return (
       <>
-        <div id="content">
-          <UIView />
-        </div>
+        <div id="content">{renderRoutes(this.props.route.routes)}</div>
         <GlobalHotkeys hotkeys={hotkeys} />
         <ItemPopupContainer boundarySelector=".store-header" />
         <ItemPickerContainer />

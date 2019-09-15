@@ -9,7 +9,6 @@ import { DimStore } from '../inventory/store-types';
 import { t } from 'app/i18next-t';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { D2StoresService } from '../inventory/d2-stores';
-import { UIViewInjectedProps } from '@uirouter/react';
 import { loadingTracker } from '../shell/loading-tracker';
 import Catalysts from './Catalysts';
 import { Loading } from '../dim-ui/Loading';
@@ -23,7 +22,7 @@ import { refresh$ } from '../shell/refresh';
 import PresentationNodeRoot from './PresentationNodeRoot';
 import Mods from './Mods';
 
-interface ProvidedProps extends UIViewInjectedProps {
+interface ProvidedProps {
   account: DestinyAccount;
 }
 
@@ -32,7 +31,6 @@ interface StoreProps {
   defs?: D2ManifestDefinitions;
   stores: DimStore[];
   ownedItemHashes: Set<number>;
-  presentationNodeHash?: number;
 }
 
 type Props = ProvidedProps & StoreProps;
@@ -52,13 +50,12 @@ const ownedItemHashesSelector = createSelector(
   }
 );
 
-function mapStateToProps(state: RootState, ownProps: ProvidedProps): StoreProps {
+function mapStateToProps(state: RootState): StoreProps {
   return {
     buckets: state.inventory.buckets,
     defs: state.manifest.d2Manifest,
     stores: storesSelector(state),
-    ownedItemHashes: ownedItemHashesSelector(state),
-    presentationNodeHash: ownProps.transition && ownProps.transition.params().presentationNodeHash
+    ownedItemHashes: ownedItemHashesSelector(state)
   };
 }
 
@@ -108,7 +105,7 @@ class Collections extends React.Component<Props, State> {
   }
 
   render() {
-    const { buckets, ownedItemHashes, transition, defs } = this.props;
+    const { buckets, ownedItemHashes, defs } = this.props;
     const { profileResponse } = this.state;
 
     if (!profileResponse || !defs || !buckets) {
@@ -145,7 +142,6 @@ class Collections extends React.Component<Props, State> {
             profileResponse={profileResponse}
             buckets={buckets}
             ownedItemHashes={ownedItemHashes}
-            openedPresentationHash={presentationNodeHash}
           />
         </ErrorBoundary>
         <div className="collections-partners">

@@ -1,5 +1,4 @@
 import React from 'react';
-import { UIView } from '@uirouter/react';
 import Header from './shell/Header';
 import clsx from 'clsx';
 import { ActivityTracker } from './dim-ui/ActivityTracker';
@@ -10,6 +9,8 @@ import ClickOutsideRoot from './dim-ui/ClickOutsideRoot';
 import HotkeysCheatSheet from './hotkeys/HotkeysCheatSheet';
 import NotificationsContainer from './notifications/NotificationsContainer';
 import styles from './App.m.scss';
+import { renderRoutes } from 'react-router-config';
+import { routes } from './routes';
 
 interface Props {
   language: string;
@@ -49,7 +50,7 @@ class App extends React.Component<Props> {
       >
         <ClickOutsideRoot>
           <Header />
-          <UIView />
+          {renderRoutes(routes)}
           <NotificationsContainer />
           <ActivityTracker />
           {$featureFlags.colorA11y && <ColorA11y />}

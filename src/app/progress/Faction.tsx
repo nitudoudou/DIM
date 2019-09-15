@@ -12,7 +12,6 @@ import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import './faction.scss';
 import PressTip from '../dim-ui/PressTip';
 import FactionIcon from './FactionIcon';
-import { UISref } from '@uirouter/react';
 import _ from 'lodash';
 
 interface FactionProps {

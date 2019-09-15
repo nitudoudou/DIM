@@ -5,7 +5,6 @@ import './GDriveRevisions.scss';
 import { GDriveRevision } from './google-drive-storage';
 import { dataStats } from './data-stats';
 import { SyncService } from './sync.service';
-import { UIViewInjectedProps } from '@uirouter/react';
 import { refreshIcon, AppIcon } from '../shell/icons';
 import { initSettings } from '../settings/settings';
 import { dimLoadoutService } from '../loadout/loadout.service';
@@ -14,7 +13,7 @@ interface State {
   revisions?: any;
 }
 
-export default class GDriveRevisions extends React.Component<UIViewInjectedProps, State> {
+export default class GDriveRevisions extends React.Component<{}, State> {
   constructor(props) {
     super(props);
     this.state = {};

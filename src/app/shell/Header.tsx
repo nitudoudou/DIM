@@ -4,7 +4,6 @@ import React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import Link from './Link';
-import { router } from '../router';
 import './header.scss';
 
 import logo from 'images/logo-type-right-light.svg';
@@ -12,7 +11,6 @@ import ClickOutside from '../dim-ui/ClickOutside';
 import Refresh from './refresh';
 import WhatsNewLink from '../whats-new/WhatsNewLink';
 import MenuBadge from './MenuBadge';
-import { UISref } from '@uirouter/react';
 import { AppIcon, menuIcon, searchIcon, settingsIcon } from './icons';
 import SearchFilter from '../search/SearchFilter';
 import { Subscriptions } from '../utils/rx-utils';
@@ -259,7 +257,7 @@ class Header extends React.PureComponent<Props, State> {
             </CSSTransition>
           )}
         </TransitionGroup>
-        <UISref to="default-account">
+        <Link to="default-account">
           <img
             className={clsx('logo', 'link', $DIM_FLAVOR)}
             title={`v${$DIM_VERSION} (${$DIM_FLAVOR})`}
@@ -267,7 +265,7 @@ class Header extends React.PureComponent<Props, State> {
             alt="DIM"
             aria-label="dim"
           />
-        </UISref>
+        </Link>
         <div className="header-links">{reverseDestinyLinks}</div>
         <span className="header-right">
           {account && (
@@ -276,11 +274,11 @@ class Header extends React.PureComponent<Props, State> {
             </span>
           )}
           <Refresh />
-          <UISref to="settings">
+          <Link to="settings">
             <a className="link" title={t('Settings.Settings')}>
               <AppIcon icon={settingsIcon} />
             </a>
-          </UISref>
+          </Link>
           <span className="link search-button" onClick={this.toggleSearch}>
             <AppIcon icon={searchIcon} />
           </span>

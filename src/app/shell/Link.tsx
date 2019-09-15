@@ -1,7 +1,6 @@
 import React from 'react';
 import { DestinyAccount } from '../accounts/destiny-account';
-import { UISrefActive, UISref } from '@uirouter/react';
-import { router } from '../router';
+import { NavLink } from 'react-router-dom';
 
 interface Props {
   account?: DestinyAccount;
@@ -46,14 +45,14 @@ export default class Link extends React.Component<Props, State> {
     // it can't handle lazy states, and we need to use "key" to nuke the whole component tree on updates.
 
     return (
-      <UISrefActive key={this.state.generation} class="active">
+      <NavLink key={this.state.generation} class="active">
         <UISref to={state} params={account}>
           <a className="link">
             {children}
             {text}
           </a>
         </UISref>
-      </UISrefActive>
+      </NavLink>
     );
   }
 }

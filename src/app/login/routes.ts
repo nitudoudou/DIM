@@ -1,10 +1,10 @@
 import Login from './Login';
-import { ReactStateDeclaration } from '@uirouter/react';
+import { RouteConfig } from 'react-router-config';
 
-export const states: ReactStateDeclaration[] = [
+export const states: RouteConfig[] = [
   {
-    name: 'login',
-    url: '/login',
+    key: 'login',
+    path: '/login',
     component: Login,
     params: {
       reauth: false

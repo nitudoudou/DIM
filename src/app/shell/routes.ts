@@ -1,8 +1,8 @@
-import { ReactStateDeclaration } from '@uirouter/react';
+import { RouteConfig } from 'react-router-config';
 import About from './About';
 import Privacy from './Privacy';
 
-export const states: ReactStateDeclaration[] = [
+export const states: RouteConfig[] = [
   {
     name: 'about',
     component: About,

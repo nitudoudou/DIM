@@ -1,7 +1,7 @@
-import { ReactStateDeclaration } from '@uirouter/react';
+import { RouteConfig } from 'react-router-config';
 import RecordBooks from './RecordBooks';
 
-export const states: ReactStateDeclaration[] = [
+export const states: RouteConfig[] = [
   {
     name: 'destiny1.record-books',
     component: RecordBooks,

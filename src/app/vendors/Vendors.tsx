@@ -14,7 +14,6 @@ import { DimStore } from '../inventory/store-types';
 import Vendor from './Vendor';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { D2StoresService, mergeCollectibles } from '../inventory/d2-stores';
-import { UIViewInjectedProps } from '@uirouter/react';
 import { Loading } from '../dim-ui/Loading';
 import { t } from 'app/i18next-t';
 import { Subscriptions } from '../utils/rx-utils';
@@ -72,7 +71,7 @@ interface State {
   filterToUnacquired: boolean;
 }
 
-type Props = ProvidedProps & StoreProps & UIViewInjectedProps & DispatchProp<any>;
+type Props = ProvidedProps & StoreProps & DispatchProp<any>;
 
 const EMPTY_MAP = {};
 const EMPTY_ARRAY = [];
@@ -108,7 +107,7 @@ class Vendors extends React.Component<Props, State> {
 
   async loadVendors() {
     const { selectedStoreId } = this.state;
-    const { defs, account, transition, stores, dispatch } = this.props;
+    const { defs, account, stores, dispatch } = this.props;
     if (this.state.error) {
       this.setState({ error: undefined });
     }

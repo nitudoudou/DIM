@@ -1,5 +1,5 @@
 import { destinyAccountResolver } from '../accounts/destiny-account-resolver';
-import { ReactStateDeclaration } from '@uirouter/react';
+import { RouteConfig } from 'react-router-config';
 import Destiny from '../shell/Destiny';
 import { states as recordBookStates } from './record-books/routes';
 import { states as activitiesStates } from './activities/routes';
@@ -8,7 +8,7 @@ import { states as vendorsStates } from './vendors/routes';
 import Inventory from '../inventory/Inventory';
 
 // Root state for Destiny 1 views
-export const states: ReactStateDeclaration[] = [
+export const states: RouteConfig[] = [
   {
     name: 'destiny1',
     redirectTo: 'destiny1.inventory',

@@ -1,7 +1,7 @@
-import { ReactStateDeclaration } from '@uirouter/react';
+import { RouteConfig } from 'react-router-config';
 import Developer from './Developer';
 
-export const states: ReactStateDeclaration[] =
+export const states: RouteConfig[] =
   $DIM_FLAVOR === 'dev'
     ? [
         {

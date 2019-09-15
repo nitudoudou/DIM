@@ -1,7 +1,7 @@
-import { ReactStateDeclaration } from '@uirouter/react';
+import { RouteConfig } from 'react-router-config';
 import Activities from './Activities';
 
-export const states: ReactStateDeclaration[] = [
+export const states: RouteConfig[] = [
   {
     name: 'destiny1.activities',
     url: '/activities',
