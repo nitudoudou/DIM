@@ -12,15 +12,15 @@ import { states as shellStates } from './shell/routes';
 import { RouteConfig } from 'react-router-config';
 
 export const routes: RouteConfig[] = [
-  defaultAccountRoute,
-  ...destiny1States,
-  ...destiny2States,
+  //defaultAccountRoute,
+  //...destiny1States,
+  //...destiny2States,
   ...whatsNewStates,
-  ...builderStates,
+  //...builderStates,
   ...loginStates,
-  ...progressStates,
-  ...vendorsStates,
-  ...collectionsStates,
+  //...progressStates,
+  //...vendorsStates,
+  //...collectionsStates,
   ...settingsStates,
   ...shellStates,
   // Only include developer stuff in the bundle in dev

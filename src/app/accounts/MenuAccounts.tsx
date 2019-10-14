@@ -1,6 +1,6 @@
 import React from 'react';
 import { removeToken } from '../bungie-api/oauth-tokens';
-import './AccountSelect.scss';
+import './Account.scss';
 import { compareAccounts, DestinyAccount } from './destiny-account';
 import { AppIcon, signOutIcon } from '../shell/icons';
 import { currentAccountSelector } from './reducer';

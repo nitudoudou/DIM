@@ -1,8 +1,8 @@
 import { t } from 'app/i18next-t';
 import React from 'react';
 import './Account.scss';
-import { DestinyAccount, PLATFORM_ICONS } from './destiny-account.service';
-import classNames from 'classnames';
+import { DestinyAccount, PLATFORM_ICONS } from './destiny-account';
+import clsx from 'clsx';
 import { AppIcon, collapseIcon } from '../shell/icons';
 import _ from 'lodash';
 
