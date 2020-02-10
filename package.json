@@ -75,7 +75,7 @@
     "@types/react-transition-group": "^4.2.0",
     "@typescript-eslint/eslint-plugin": "^2.0.0",
     "@typescript-eslint/eslint-plugin-tslint": "^2.0.0",
-    "@typescript-eslint/parser": "^2.0.0",
+    "@typescript-eslint/parser": "2.19.0",
     "autoprefixer": "^9.0.1",
     "babel-loader": "^8.0.2",
     "babel-plugin-lodash": "^3.3.2",
