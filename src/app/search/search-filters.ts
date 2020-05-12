@@ -50,6 +50,7 @@ import seasonTags from 'data/d2/season-tags.json';
 import { settingsSelector } from 'app/settings/reducer';
 import store from '../store/store';
 import { getStore } from 'app/inventory/stores-helpers';
+import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 
 /**
  * (to the tune of TMNT) ♪ string processing helper functions ♫
@@ -123,14 +124,14 @@ export const searchFilterSelector = createSelector(
  */
 
 export interface SearchConfig {
-  destinyVersion: 1 | 2;
+  destinyVersion: DestinyVersion;
   keywords: string[];
   categoryHashFilters: { [key: string]: number };
   keywordToFilter: { [key: string]: string };
 }
 
 /** Builds an object that describes the available search keywords and category mappings. */
-export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
+export function buildSearchConfig(destinyVersion: DestinyVersion): SearchConfig {
   const isD1 = destinyVersion === 1;
   const isD2 = destinyVersion === 2;
   const categories = isD1 ? D1Categories : D2Categories;
@@ -318,19 +319,25 @@ export function buildSearchConfig(destinyVersion: 1 | 2): SearchConfig {
       operators.map((comparison) => `basestat:${stat}:${comparison}`)
     ),
     // keywords for checking which stat is masterworked
-    ...stats.map((stat) => `masterwork:${stat}`),
+    ...(isD2 ? stats.map((stat) => `masterwork:${stat}`) : []),
     // keywords for named seasons. reverse so newest seasons are first
-    ...Object.keys(seasonTags)
-      .reverse()
-      .map((tag) => `season:${tag}`),
+    ...(isD2
+      ? Object.keys(seasonTags)
+          .reverse()
+          .map((tag) => `season:${tag}`)
+      : []),
     // keywords for seasonal mod slots
-    ...modSlotTags.concat(['any', 'none']).map((modSlotName) => `modslot:${modSlotName}`),
-    ...modSlotTags.concat(['any', 'none']).map((modSlotName) => `holdsmod:${modSlotName}`),
+    ...(isD2
+      ? modSlotTags.concat(['any', 'none']).map((modSlotName) => `modslot:${modSlotName}`)
+      : []),
+    ...(isD2
+      ? modSlotTags.concat(['any', 'none']).map((modSlotName) => `holdsmod:${modSlotName}`)
+      : []),
     // a keyword for every combination of a DIM-processed stat and mathmatical operator
     ...ranges.flatMap((range) => operators.map((comparison) => `${range}:${comparison}`)),
     // energy capacity elements and ranges
-    ...hashes.energyCapacityTypes.map((element) => `energycapacity:${element}`),
-    ...operators.map((comparison) => `energycapacity:${comparison}`),
+    ...(isD2 ? hashes.energyCapacityTypes.map((element) => `energycapacity:${element}`) : []),
+    ...(isD2 ? operators.map((comparison) => `energycapacity:${comparison}`) : []),
     // "source:" keyword plus one for each source
     ...(isD2
       ? [
@@ -548,10 +555,11 @@ function searchFilters(
     /**
      * Build a complex predicate function from a full query string.
      */
-    filterFunction: memoizeOne(function(query: string): (item: DimItem) => boolean {
+    filterFunction: memoizeOne(function (query: string): (item: DimItem) => boolean {
       query = query.trim().toLowerCase();
       if (!query.length) {
-        query = '-tag:archive';
+        // By default, show anything that doesn't have the archive tag
+        return (item: DimItem) => getTag(item, itemInfos) !== 'archive';
       }
 
       // http://blog.tatedavies.com/2012/08/28/replace-microsoft-chars-in-javascript/
@@ -1118,20 +1126,26 @@ function searchFilters(
         return compareByOperator(item.quality.min, predicate);
       },
       hasRating(item: DimItem, predicate: string) {
-        const dtrRating = getRating(item, ratings);
-        return predicate.length !== 0 && dtrRating?.overallScore;
+        if ($featureFlags.reviewsEnabled) {
+          const dtrRating = getRating(item, ratings);
+          return predicate.length !== 0 && dtrRating?.overallScore;
+        }
       },
       randomroll(item: D2Item) {
         return Boolean(item.energy) || item.sockets?.sockets.some((s) => s.hasRandomizedPlugItems);
       },
       rating(item: DimItem, predicate: string) {
-        const dtrRating = getRating(item, ratings);
-        const showRating = dtrRating && shouldShowRating(dtrRating) && dtrRating.overallScore;
-        return showRating && compareByOperator(dtrRating?.overallScore, predicate);
+        if ($featureFlags.reviewsEnabled) {
+          const dtrRating = getRating(item, ratings);
+          const showRating = dtrRating && shouldShowRating(dtrRating) && dtrRating.overallScore;
+          return showRating && compareByOperator(dtrRating?.overallScore, predicate);
+        }
       },
       ratingcount(item: DimItem, predicate: string) {
-        const dtrRating = getRating(item, ratings);
-        return dtrRating?.ratingCount && compareByOperator(dtrRating.ratingCount, predicate);
+        if ($featureFlags.reviewsEnabled) {
+          const dtrRating = getRating(item, ratings);
+          return dtrRating?.ratingCount && compareByOperator(dtrRating.ratingCount, predicate);
+        }
       },
       vendor(item: D1Item, predicate: string) {
         if (!item) {

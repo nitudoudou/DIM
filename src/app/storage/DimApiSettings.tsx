@@ -18,13 +18,13 @@ import {
   loadDimApiData,
   showBackupDownloadedNotification
 } from 'app/dim-api/actions';
-import { UISref } from '@uirouter/react';
 import { AppIcon, deleteIcon } from 'app/shell/icons';
 import LegacyGoogleDriveSettings from './LegacyGoogleDriveSettings';
 import HelpLink from 'app/dim-ui/HelpLink';
 import { exportDimApiData } from 'app/dim-api/dim-api';
 import { exportBackupData } from './export-data';
 import ErrorPanel from 'app/shell/ErrorPanel';
+import { Link } from 'react-router-dom';
 
 interface StoreProps {
   apiPermissionGranted: boolean;
@@ -40,7 +40,7 @@ function mapStateToProps(state: RootState): StoreProps {
 
 type Props = StoreProps & ThunkDispatchProp;
 
-export const dimApiHelpLink =
+const dimApiHelpLink =
   'https://github.com/DestinyItemManager/DIM/wiki/DIM-Sync-(new-storage-for-tags,-loadouts,-and-settings)';
 
 function DimApiSettings({ apiPermissionGranted, dispatch, profileLoadedError }: Props) {
@@ -135,9 +135,9 @@ function DimApiSettings({ apiPermissionGranted, dispatch, profileLoadedError }: 
       {$featureFlags.dimApi && apiPermissionGranted && (
         <div className="setting horizontal">
           <label>{t('Storage.AuditLogLabel')}</label>
-          <UISref to="audit">
-            <a className="dim-button">{t('Storage.AuditLog')}</a>
-          </UISref>
+          <Link to={(location) => `${location.pathname}/audit`} className="dim-button">
+            {t('Storage.AuditLog')}
+          </Link>
         </div>
       )}
       {$featureFlags.dimApi && (

@@ -5,10 +5,17 @@
   },
   "Accounts": {
     "Blizzard": "PC",
+    "ErrorLoadInventory": "Impossibile caricare i tuoi personaggi di Destiny e l'inventario",
+    "ErrorLoadManifest": "Impossibile caricare il database informazioni di Destiny da Bungie",
+    "ErrorLoading": "Impossibile caricare gli account di Destiny da Bungie.net",
+    "MissingDescription": "L'account che stai cercando di visualizzare non è un account collegato al tuo profilo Bungie.net.",
+    "MissingTitle": "Account Non Trovato",
     "NoCharacters": "Non possiedi personaggi di Destiny associati a questo account Bungie.net. Prova a connetterti con un account diverso.",
     "PlayStation": "PS4",
     "Stadia": "Stadia",
     "Steam": "Steam",
+    "UnlinkTwitch": "Collegando il tuo account Twitch a Bungie.net, i tuoi account di Destiny 1 smetteranno di funzionare.",
+    "UnlinkTwitchButton": "Scollega Twitch",
     "Xbox": "XB1"
   },
   "Activities": {
@@ -135,6 +142,9 @@
   },
   "ErrorBoundary": {
     "Title": "Qualcosa è andato storto"
+  },
+  "ErrorPanel": {
+    "Description": "È probabile che questo sia un problema che riguarda tutte le applicazioni di terze parti. Controlla se Bungie.net o la Destiny 2 Companion App funzionano."
   },
   "FarmingMode": {
     "D2Desc": "DIM sta impedendo agli oggetti di finire dall'Amministratrice assicurandosi che ci sia sempre uno spazio libero per tipo di oggetto su {{store}}. Sta spostando oggetti nel deposito per fare spazio.",
@@ -433,6 +443,10 @@
   },
   "LB": {
     "AdvancedOptions": "Opzioni Avanzate",
+    "Chest": "Petto",
+    "ChooseAMod": "Scegli le tue modifiche",
+    "ChooseAPerk": "Scegli un perk",
+    "ClassItem": "Oggetto di classe",
     "ClearLocked": "Pulisci Bloccati",
     "ContainsVendorItems": "Questo equipaggiamento contiene oggetti dei mercanti",
     "Current": "Corrente",
@@ -440,6 +454,9 @@
     "Exclude": "Oggetti esclusi",
     "ExcludeHelp": "Shift + click su un oggetto (o trascina e rilascia in questo riquadro) per creare dei set senza delle specifiche armature.",
     "FilterSets": "Filtra i set",
+    "Gauntlets": "Braccia",
+    "General": "Generale",
+    "Helmet": "Testa",
     "Help": {
       "And": "Verranno utilizzate armature, che presentano tutti i perk selezionati",
       "ChangeNodes": "All'interno del gioco seleziona i perk di Intelletto/Disciplina/Forza, che sono mostrati, per ricreare ogni loadout.",
@@ -461,6 +478,7 @@
     "HideAllConfigs": "Nascondi tutte le configurazioni",
     "HideConfigs": "Nascondi configurazioni",
     "LB": "Ottimizzatore Loadout",
+    "Legs": "Gambe",
     "LightMode": {
       "HelpCurrent": "Calcola i loadout con i livelli di difesa correnti.",
       "HelpScaled": "Calcola i loadout, supponendo che tutti gli oggetti abbiano 350 di difesa.",
@@ -472,6 +490,7 @@
     "Locked": "Oggetti Bloccati",
     "LockedHelp": "Trascina e rilascia un qualsiasi oggetto nel suo riquadro per costruire un set con quella specifica armatura. Shift + click per escludere oggetti.",
     "Missing2": "Manca un raro, un leggendario o un esotico per costruire un set completo!",
+    "ModLockButton": "Seleziona modifiche",
     "ProcessingMode": {
       "Fast": "Veloce",
       "Full": "Completa",
@@ -480,10 +499,20 @@
       "ProcessingMode": "Procedura"
     },
     "Scaled": "In Scala",
+    "SearchAMod": "Cerca una modifica o descrizione",
+    "Seasonal": "Stagionale",
     "ShowAllConfigs": "Mostra tutte le configurazioni",
     "ShowConfigs": "Mostra configurazioni",
     "ShowGear": "Armatura per {{class}}",
     "Vendor": "Includi oggetti dei Mercanti"
+  },
+  "Loading": {
+    "Accounts": "Caricamento accounts di Destiny...",
+    "AuditLog": "Caricamento cronologia di DIM Sync...",
+    "Code": "Caricamento codice di DIM...",
+    "FilterHelp": "Caricamento consigli per filtri ricerca...",
+    "Profile": "Caricamento del profilo di Destiny...",
+    "Vendors": "Caricamento dei mercanti di Destiny..."
   },
   "LoadoutBuilder": {
     "AltPerkKey": "Scegli questo perk per visualizzare le statistiche",
@@ -507,7 +536,7 @@
     "LimitedCombos": "Hai {{combosWithoutCaps, number}} combinazioni possibili di statistiche, ma abbiamo considerato soltanto {{combos, number}} di esse per evitare che DIM si blocchi. Di conseguenza, alcune possibilità non sono mostrate. Blocca alcuni oggetti o perk oppure smantella qualche armatura vecchia per scendere sotto al limite.",
     "LockEquipped": "Equipaggiato",
     "LockItem": "Blocca oggetto",
-    "LockPerk": "Seleziona mod o perk",
+    "LockPerk": "Seleziona elemento o perk",
     "NewEmptyLoadout": "Crea un Loadout vuoto",
     "NoBuildsFound": "Nessuna build trovata. Prova ad espandere i criteri di filtraggio.",
     "NumStatMixes": "{{count, number}} mix di statistiche",
@@ -623,11 +652,10 @@
     "WeaponsOnly": "Armi"
   },
   "Manifest": {
-    "Build": "Costruisco il database di informazioni di Destiny",
-    "Download": "Scarico le ultime informazioni riguardanti Destiny da Bungie",
-    "Error": "Errore caricando le informazioni su Destiny:\n{{error}}\nRicarica per riprovare.",
-    "Load": "Carico le informazioni su Destiny salvate",
-    "Outdated": "Informazioni su Destiny datate",
+    "Download": "Scaricamento del database di informazioni di Destiny più recente da Bungie...",
+    "Error": "Errore nel caricamento del database informazioni di Destiny:\n{{error}}\nRicarica per riprovare.",
+    "Load": "Carico il database di informazioni di Destiny...",
+    "Outdated": "Database di informazioni di Destiny obsoleto",
     "OutdatedExplanation": "Bungie ha aggiornato il suo database di informazioni su Destiny. Ricarica DIM per raccogliere le nuove informazioni. Nota che alcune cose su DIM potrebbero non funzionare per alcune ore, dopo che Bungie ha aggiornato Destiny, poiché i nuovi dati vengono diffusi dai loro sistemi."
   },
   "Milestone": {
@@ -694,8 +722,43 @@
     "BulkMove": "Sposta a",
     "BulkMoveLoadoutName": "Seleziona in Gestore Deposito",
     "BulkTag": "Etichetta",
+    "Columns": {
+      "Archetype": "Archetipo",
+      "BaseStats": "Statistiche Base",
+      "CustomTotal": "Totale Personalizzato",
+      "Damage": "Tipo di Danno",
+      "Element": "Elemento",
+      "Energy": "Energia",
+      "Event": "Evento",
+      "Icon": "Icona",
+      "KillTracker": "Contatore Uccisioni",
+      "Loadouts": "Loadouts",
+      "MasterworkStat": "Statistica Prodigio",
+      "MasterworkTier": "Grado Prodigio",
+      "ModSlot": "Slot Modifiche",
+      "Mods": "Modifiche",
+      "Name": "Nome",
+      "Notes": "Note",
+      "Perks": "Perks",
+      "Rating": "Giudizio",
+      "Reacquireable": "Riacquisibile",
+      "Season": "Stagione",
+      "Source": "Fonte",
+      "Stats": "Statistiche",
+      "Tag": "Etichetta",
+      "Tier": "Rarità",
+      "WishList": "Lista Desideri",
+      "WishListNotes": "Note Lista Desideri",
+      "Year": "Anno"
+    },
     "EnabledColumns": "Colonne Abilitate",
-    "Organizer": "Gestione Deposito"
+    "Lock": "Blocca",
+    "NoMobile": "Questa funzionalità non è ottimizzata per dispositivi mobili.",
+    "Organizer": "Gestione Deposito",
+    "SelectAll": "Seleziona Tutto",
+    "SelectItem": "Seleziona o deleseziona {{name}}",
+    "ShiftTip": "Suggerimento: Tieni premuto il tasto Maiusc e clicca su una cella",
+    "Unlock": "Sblocca"
   },
   "Progress": {
     "Bounties": "Taglie",
@@ -880,11 +943,6 @@
     "TagItems": "Etichetta Oggetti",
     "UnlockAll": "Sblocca Oggetti"
   },
-  "TrialsCard": {
-    "FiveWins": "Ricompensa 5 Vittorie (Armatura)",
-    "Flawless": "Vittoria Impeccabile",
-    "SevenWins": "Ricompensa 7 Vittorie (Arma)"
-  },
   "Triumphs": {
     "HideCompleted": "Nascondi Completati",
     "RevealRedacted": "Rivela Segreti"
@@ -901,8 +959,7 @@
     "DestinySets": "Sfoglia più oggetti su Destiny Sets",
     "Engram": "Engramma Ricompensa",
     "FilterToUnacquired": "Mostra solo oggetti non acquisiti",
-    "Vendors": "Mercanti",
-    "Year2Mods": "Modifiche anno 2"
+    "Vendors": "Mercanti"
   },
   "Views": {
     "About": {
@@ -963,6 +1020,7 @@
     "ExternalSource": "Oppure, inserisci un URL di una Lista Desideri",
     "Header": "Lista Desideri",
     "Import": "Carica i roll della Lista Desideri",
+    "ImportError": "Errore nel caricamento della Lista Desideri: {{error}}",
     "ImportFailed": "Nessuna informazione trovata nella Lista Desideri.",
     "ImportNoFile": "Nessun file selezionato.",
     "ImportSuccess": "Lista desideri caricata con informazioni su un roll.{{titleAndDescription}}",

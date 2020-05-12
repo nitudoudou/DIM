@@ -39,28 +39,19 @@
 }
 
 .icon {
-  position: absolute;
-  top: -1px;
   left: 8px;
-  width: 18px;
-  height: 53px;
 }
 
-.bannerIcon {
-  position: absolute;
-  width: 18px;
-}
-
-.scopeIcon {
-  position: absolute;
-  width: 16px;
-  left: 1px;
-  top: 16px;
-}
-
-.metricIcon {
-  position: absolute;
-  width: 16px;
-  left: 1px;
-  top: 29px;
+.description {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  img {
+    filter: invert(0.7);
+    height: 15px;
+    margin: 0 3px;
+    &:first-child {
+      margin-left: 0;
+    }
+  }
 }

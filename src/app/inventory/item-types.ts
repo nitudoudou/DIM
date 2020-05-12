@@ -21,6 +21,7 @@ import {
 import { DimStore, StoreServiceType, D1StoreServiceType, D2StoreServiceType } from './store-types';
 import { InventoryBucket } from './inventory-buckets';
 import { D2EventEnum } from 'data/d2/d2-event-info';
+import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 
 /** DIM's own Tier type. There's one in the Bungie API but the names are too confusing. */
 export type Tier = 'Exotic' | 'Legendary' | 'Rare' | 'Uncommon' | 'Common';
@@ -34,7 +35,7 @@ export interface DimItem {
   /** The ID of the store that currently contains this item. */
   owner: string;
   /** The version of Destiny this comes from. */
-  destinyVersion: 1 | 2;
+  destinyVersion: DestinyVersion;
   /** The bucket the item is currently in. */
   location: InventoryBucket;
   /** The bucket the item normally resides in (even though it may currently be elsewhere, such as in the postmaster). */
@@ -143,7 +144,7 @@ export interface DimItem {
   /** Detailed stats for the item. */
   stats: DimStat[] | null;
   /** Any objectives associated with the item. */
-  objectives: DimObjective[] | null;
+  objectives: DestinyObjectiveProgress[] | null;
   /** Is this an engram? */
   isEngram: boolean;
   /** The reference hash for lore attached to this item (D2 only). */
@@ -152,6 +153,12 @@ export interface DimItem {
   lastManuallyMoved: number;
   /** Sometimes the API doesn't return socket info. This tells whether the item *should* have socket info but doesn't. */
   missingSockets: boolean;
+  /** Stat Tracker */
+  metricHash?: number;
+  /** Stat Tracker Progress */
+  metricObjective?: DestinyObjectiveProgress;
+  /** Metrics that can be used with this item. */
+  availableMetricCategoryNodeHashes?: number[];
 
   /** Can this item be equipped by the given store? */
   canBeEquippedBy(store: DimStore): boolean;
@@ -297,26 +304,6 @@ export interface D1Stat extends DimStat {
     min: number;
     range: string;
   };
-}
-
-export interface DimObjective {
-  /** Localized display of the objective status. */
-  displayName: string;
-  /** Localized description of the objective. */
-  description?: string;
-  /** Current value. */
-  progress: number;
-  /** Value at which this objective would be considered "complete". */
-  completionValue: number;
-  /** Is this complete? */
-  complete: boolean;
-  /** Is this a checkbox? */
-  boolean: boolean;
-  /** The actual string to display for the objective value (e.g "5/10" or "50%") */
-  display?: string;
-  /** Override display styles for objectives, such as 'trials' or 'integer' */
-  // TODO: fold 'boolean' into this
-  displayStyle: string | null;
 }
 
 export interface DimFlavorObjective {

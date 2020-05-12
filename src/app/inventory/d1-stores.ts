@@ -1,8 +1,8 @@
 import _ from 'lodash';
-import { compareAccounts, DestinyAccount } from '../accounts/destiny-account';
+import { DestinyAccount } from '../accounts/destiny-account';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { reportException } from '../utils/exceptions';
-import { getCharacters, getStores } from '../bungie-api/destiny1-api';
+import { getStores } from '../bungie-api/destiny1-api';
 import { getDefinitions, D1ManifestDefinitions } from '../destiny1/d1-definitions';
 import { getBuckets } from '../destiny1/d1-buckets';
 import { loadItemInfos, cleanInfos } from './dim-item-info';
@@ -17,14 +17,12 @@ import { update, loadNewItems, error } from './actions';
 import { loadingTracker } from '../shell/loading-tracker';
 import { showNotification } from '../notifications/notifications';
 import { BehaviorSubject, Subject, ConnectableObservable } from 'rxjs';
-import { take, distinctUntilChanged, switchMap, publishReplay, merge } from 'rxjs/operators';
-import { getActivePlatform } from 'app/accounts/platforms';
+import { take, switchMap, publishReplay, merge } from 'rxjs/operators';
+import { storesSelector } from './selectors';
 
 export const D1StoresService = StoreService();
 
 function StoreService(): D1StoreServiceType {
-  let _stores: D1Store[] = [];
-
   // A subject that keeps track of the current account. Because it's a
   // behavior subject, any new subscriber will always see its last
   // value.
@@ -36,8 +34,6 @@ function StoreService(): D1StoreServiceType {
   // A stream of stores that switches on account changes and supports reloading.
   // This is a ConnectableObservable that must be connected to start.
   const storesStream = accountStream.pipe(
-    // Only emit when the account changes
-    distinctUntilChanged(compareAccounts),
     // But also re-emit the current value of the account stream
     // whenever the force reload triggers
     merge(forceReloadTrigger.pipe(switchMap(() => accountStream.pipe(take(1))))),
@@ -51,36 +47,12 @@ function StoreService(): D1StoreServiceType {
   //       nothing changed!
 
   const service = {
-    getStores: () => _stores,
-    getStore: (id: string) => _stores.find((s) => s.id === id),
-    getVault: () => _stores.find((s) => s.isVault) as D1Vault | undefined,
+    getStores: () => storesSelector(store.getState()) as D1Store[],
     getStoresStream,
-    updateCharacters,
-    reloadStores,
-    touch() {
-      store.dispatch(update({ stores: _stores }));
-    }
+    reloadStores
   };
 
   return service;
-
-  /**
-   * Update the high level character information for all the stores
-   * (level, light, int/dis/str, etc.). This does not update the
-   * items in the stores - to do that, call reloadStores.
-   */
-  function updateCharacters(account: DestinyAccount = getActivePlatform()!) {
-    return Promise.all([getDefinitions(), getCharacters(account)]).then(([defs, bungieStores]) => {
-      _stores.forEach((dStore) => {
-        if (!dStore.isVault) {
-          const bStore = bungieStores.find((s) => s.id === dStore.id)!;
-          dStore.updateCharacterInfo(defs, bStore.base);
-        }
-      });
-      service.touch();
-      return _stores;
-    });
-  }
 
   /**
    * Set the current account, and get a stream of stores updates.
@@ -143,8 +115,6 @@ function StoreService(): D1StoreServiceType {
         return Promise.all([buckets, processStorePromises]);
       })
       .then(([buckets, stores]) => {
-        _stores = stores;
-
         if ($featureFlags.reviewsEnabled) {
           store.dispatch(fetchRatings(stores));
         }
@@ -163,7 +133,7 @@ function StoreService(): D1StoreServiceType {
       .catch((e) => {
         console.error('Error loading stores', e);
         reportException('D1StoresService', e);
-        if (_stores.length > 0) {
+        if (storesSelector(store.getState()).length > 0) {
           // don't replace their inventory with the error, just notify
           showNotification(bungieErrorToaster(e));
         } else {

@@ -1,49 +1,38 @@
 import {
   DestinyClass,
   DestinyProgression,
-  DestinyCharacterComponent,
   DestinyFactionDefinition,
   DestinyColor,
   DestinyDisplayPropertiesDefinition
 } from 'bungie-api-ts/destiny2';
-import { D1ManifestDefinitions } from '../destiny1/d1-definitions';
-import { D2ManifestDefinitions } from '../destiny2/d2-definitions';
 import { DimItem, D2Item, D1Item } from './item-types';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { InventoryBucket } from './inventory-buckets';
 import { ConnectableObservable } from 'rxjs';
+import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 
 /**
  * A generic store service that produces stores and items that are the same across D1 and D2. Use this
  * if you don't care about the differences between the two.
  */
-export interface StoreServiceType<StoreType = DimStore, VaultType = DimVault> {
+export interface StoreServiceType<StoreType = DimStore> {
   /** Get a list of all characters plus the vault. */
   getStores(): StoreType[];
-  /** Get a store by character ID. */
-  getStore(id: string): StoreType | undefined;
-  /** Get the vault. */
-  getVault(): VaultType | undefined;
   /** A stream of store updates for a particular account. */
   getStoresStream(account: DestinyAccount): ConnectableObservable<StoreType[] | undefined>;
-  /** Refresh just character info (current light/stats, etc.) */
-  updateCharacters(account?: DestinyAccount): Promise<StoreType[]>;
   /** Reload inventory completely. */
   reloadStores(): Promise<StoreType[] | undefined>;
-
-  /** Tell Redux things have changed. Temporary bridge for Redux. */
-  touch(): void;
 }
 
 /**
  * A Destiny 2 store service. This will use D2 types everywhere, avoiding the need to check.
  */
-export type D2StoreServiceType = StoreServiceType<D2Store, D2Vault>;
+export type D2StoreServiceType = StoreServiceType<D2Store>;
 
 /**
  * A Destiny 1 store service. This will use D1 types everywhere, avoiding the need to check.
  */
-export type D1StoreServiceType = StoreServiceType<D1Store, D1Vault>;
+export type D1StoreServiceType = StoreServiceType<D1Store>;
 
 /**
  * A generic DIM character or vault - a "store" of items. Use this type when you can handle both D1 and D2 characters,
@@ -59,7 +48,7 @@ export interface DimStore<Item = DimItem> {
   /** All items, grouped by their bucket. */
   buckets: { [bucketHash: number]: Item[] };
   /** The Destiny version this store came from. */
-  destinyVersion: 1 | 2;
+  destinyVersion: DestinyVersion;
   /** An icon (emblem) for the store. */
   icon: string;
   /** Is this the most-recently-played character? */
@@ -87,17 +76,19 @@ export interface DimStore<Item = DimItem> {
   /** Is this the vault? */
   isVault: boolean;
   /** Character stats. */
-  stats: {};
+  stats: {
+    /** average of your highest simultaneously equippable gear */
+    maxGearPower?: DimCharacterStat;
+    /** currently represents the power level bonus provided by the Seasonal Artifact */
+    powerModifier?: DimCharacterStat;
+    /** maxGearPower + powerModifier. the highest PL you can get your inventory screen to show */
+    maxTotalPower?: DimCharacterStat;
+    [hash: number]: DimCharacterStat;
+  };
   /** Character progression. */
   progression: null | {
     progressions: DestinyProgression[];
   };
-
-  /** Apply updated character info. */
-  updateCharacterInfo(
-    defs: D1ManifestDefinitions | D2ManifestDefinitions,
-    bStore: any
-  ): Promise<DimStore[]>;
 
   /**
    * Get the total amount of this item in the store, across all stacks,
@@ -129,9 +120,6 @@ export interface DimStore<Item = DimItem> {
 
   /** The stores service associated with this store. */
   getStoresService(): StoreServiceType;
-
-  /** A temporary way of telling Redux that something about the stores has changed. */
-  touch(): void;
 }
 
 /** How many items are in each vault bucket. DIM hides the vault bucket concept from users but needs the count to track progress. */
@@ -166,51 +154,26 @@ export interface D2Vault extends D2Store {
   }[];
 }
 
-export interface D2CharacterStat {
+/** A character-level stat. */
+export interface DimCharacterStat {
   /** The DestinyStatDefinition hash for the stat. */
-  id: number;
+  hash: number;
   /** The localized name of the stat. */
   name: string;
-  /** The localized description of the stat. */
-  description: string;
-  /** The current value of the stat. */
-  value: number | string;
-  /** An icon associated with the stat. */
-  icon: string;
-  /** The size of one "tier" of the stat (for D1 stats) */
-  tierMax?: number;
-  /** The stat divided into tiers. Each element is how full that tier is. */
-  tiers?: number[] | string[];
-  /** Whether this stat is inaccurate because it relies on classified items (like base power). */
-  hasClassified?: boolean;
-}
-
-export interface D1CharacterStat {
-  /** Stat identifier (e.g. "STAT_INTELLECT") */
-  id: string;
-  /** The localized name of the stat. */
-  name?: string;
   /** An icon associated with the stat. */
   icon?: string;
   /** The current value of the stat. */
   value: number;
 
+  /** The localized description of the stat. */
+  description: string;
+  /** Whether this stat is inaccurate because it relies on classified items (like base power). */
+  hasClassified?: boolean;
+
   /** A localized description of this stat's effect. */
   effect?: string;
-  /** The stat value, clamped to <300. TODO: what is this? */
-  normalized?: number;
-  /** Which tier (out of 5) has been activated. */
-  tier?: number;
-  /** The size of one "tier" of the stat (for D1 stats) */
-  tierMax?: number;
-  /** The stat divided into tiers. Each element is how full that tier is. */
-  tiers?: number[];
-  /** TODO: remove this and normalized */
-  remaining?: number;
   /** Cooldown time for the associated ability. */
   cooldown?: string;
-  /** Percentage of maximum stat value. */
-  percentage?: string;
 }
 
 export interface D1Progression extends DestinyProgression {
@@ -226,9 +189,6 @@ export interface D1Progression extends DestinyProgression {
  * A D1 character. Use this when you need D1-specific properties or D1-specific items.
  */
 export interface D1Store extends DimStore<D1Item> {
-  stats: {
-    [hash: string]: D1CharacterStat;
-  };
   progression: null | {
     progressions: D1Progression[];
   };
@@ -236,8 +196,6 @@ export interface D1Store extends DimStore<D1Item> {
   // TODO: shape?
   advisors: any;
 
-  updateCharacterInfo(defs: D1ManifestDefinitions, bStore: any): Promise<D1Store[]>;
-  updateCharacterInfoFromEquip(characterInfo): void;
   /** Which faction is this character currently aligned with? */
   factionAlignment(): void;
   getStoresService(): D1StoreServiceType;
@@ -250,18 +208,5 @@ export interface D2Store extends DimStore<D2Item> {
   /** The vault associated with this store. */
   vault?: D2Vault;
   color: DestinyColor;
-  stats: {
-    /** average of your highest simultaneously equippable gear */
-    maxGearPower?: D2CharacterStat;
-    /** currently represents the power level bonus provided by the Seasonal Artifact */
-    powerModifier?: D2CharacterStat;
-    /** maxGearPower + powerModifier. the highest PL you can get your inventory screen to show */
-    maxTotalPower?: D2CharacterStat;
-    [statHash: number]: D2CharacterStat;
-  };
-  updateCharacterInfo(
-    defs: D2ManifestDefinitions,
-    bStore: DestinyCharacterComponent
-  ): Promise<D2Store[]>;
   getStoresService(): D1StoreServiceType;
 }

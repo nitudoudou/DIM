@@ -1,38 +1,36 @@
+import { D2Item, DimPerk } from '../item-types';
 import {
+  DestinyAmmunitionType,
   DestinyClass,
+  DestinyCollectibleComponent,
   DestinyInventoryItemDefinition,
   DestinyItemComponent,
   DestinyItemComponentSetOfint64,
   DestinyItemInstanceComponent,
   DestinyItemType,
-  ItemLocation,
-  TransferStatuses,
-  DestinyAmmunitionType,
-  ItemState,
-  DestinyCollectibleComponent,
   DestinyObjectiveProgress,
-  ItemBindStatus
+  ItemBindStatus,
+  ItemLocation,
+  ItemState,
+  TransferStatuses
 } from 'bungie-api-ts/destiny2';
-import _ from 'lodash';
-import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
-import { reportException } from '../../utils/exceptions';
+import { buildFlavorObjective, buildObjectives } from './objectives';
 
-import { D2ManifestService } from '../../manifest/manifest-service-json';
-import { t } from 'app/i18next-t';
-import { D2Item, DimPerk } from '../item-types';
-import { D2Store } from '../store-types';
-import { InventoryBuckets } from '../inventory-buckets';
-import { D2StoresService } from '../d2-stores';
-import { D2CalculatedSeason, D2CurrentSeason } from '../d2-season-info';
-import { D2SourcesToEvent } from 'data/d2/d2-event-info';
-import D2Seasons from 'data/d2/seasons.json';
-import D2SeasonToSource from 'data/d2/seasonToSource.json';
 import D2Events from 'data/d2/events.json';
-import { buildStats } from './stats';
-import { buildSockets } from './sockets';
+import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
+import { D2ManifestService } from '../../manifest/manifest-service-json';
+import { D2SourcesToEvent } from 'data/d2/d2-event-info';
+import { D2Store } from '../store-types';
+import { D2StoresService } from '../d2-stores';
+import { InventoryBuckets } from '../inventory-buckets';
+import _ from 'lodash';
 import { buildMasterwork } from './masterwork';
-import { buildObjectives, buildFlavorObjective } from './objectives';
+import { buildSockets } from './sockets';
+import { buildStats } from './stats';
 import { buildTalentGrid } from './talent-grids';
+import { reportException } from '../../utils/exceptions';
+import { t } from 'app/i18next-t';
+import { getSeason } from './season';
 
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Currency', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'];
@@ -45,10 +43,9 @@ let _idTracker: { [id: string]: number } = {};
 // A map from instance id to the last time it was manually moved this session
 const _moveTouchTimestamps = new Map<string, number>();
 
-const SourceToD2Season = D2SeasonToSource.sources;
-
-const collectiblesByItemHash = _.once((Collectible) =>
-  _.keyBy(Collectible.getAll(), (c) => c.itemHash)
+const collectiblesByItemHash = _.once(
+  (Collectible: ReturnType<D2ManifestDefinitions['Collectible']['getAll']>) =>
+    _.keyBy(Collectible, (c) => c.itemHash)
 );
 
 /**
@@ -249,7 +246,7 @@ export function makeItem(
   let displayProperties = itemDef.displayProperties;
   if (itemDef.redacted) {
     // Fill in display info from the collectible, sometimes it's not redacted there!
-    const collectibleDef = collectiblesByItemHash(defs.Collectible)[item.itemHash];
+    const collectibleDef = collectiblesByItemHash(defs.Collectible.getAll())[item.itemHash];
     if (collectibleDef) {
       displayProperties = collectibleDef.displayProperties;
     }
@@ -378,7 +375,7 @@ export function makeItem(
     previewVendor: itemDef.preview?.previewVendorHash,
     ammoType: itemDef.equippingBlock ? itemDef.equippingBlock.ammoType : DestinyAmmunitionType.None,
     source: itemDef.collectibleHash
-      ? defs.Collectible.get(itemDef.collectibleHash).sourceHash
+      ? defs.Collectible.get(itemDef.collectibleHash)?.sourceHash
       : null,
     collectibleState: collectible ? collectible.state : null,
     collectibleHash: itemDef.collectibleHash || null,
@@ -390,7 +387,10 @@ export function makeItem(
         costElementIcon: defs.Stat.get(
           defs.EnergyType.get(itemDef.plug.energyCost.energyTypeHash).costStatHash
         ).displayProperties.icon
-      }
+      },
+    metricHash: item.metricHash,
+    metricObjective: item.metricObjective,
+    availableMetricCategoryNodeHashes: itemDef.metrics?.availableMetricCategoryNodeHashes
   });
 
   createdItem.season = getSeason(createdItem);
@@ -478,15 +478,12 @@ export function makeItem(
 
   // Compute complete / completion percentage
   if (createdItem.objectives) {
-    // Counter objectives for the new emblems shouldn't count.
-    const realObjectives = createdItem.objectives.filter((o) => o.displayStyle !== 'integer');
-
-    const length = realObjectives.length;
+    const length = createdItem.objectives.length;
     if (length > 0) {
-      createdItem.complete = realObjectives.every((o) => o.complete);
+      createdItem.complete = createdItem.objectives.every((o) => o.complete);
       createdItem.percentComplete = _.sumBy(createdItem.objectives, (objective) => {
         if (objective.completionValue) {
-          return Math.min(1, objective.progress / objective.completionValue) / length;
+          return Math.min(1, (objective.progress || 0) / objective.completionValue) / length;
         } else {
           return 0;
         }
@@ -554,27 +551,6 @@ function isWeaponOrArmor1OrExoticArmor2(item: D2Item) {
 
 function isLegendaryOrBetter(item) {
   return item.tier === 'Legendary' || item.tier === 'Exotic';
-}
-
-function getSeason(item: D2Item): number {
-  if (item.classified) {
-    return D2CalculatedSeason;
-  }
-  if (
-    !item.itemCategoryHashes.length ||
-    item.typeName === 'Unknown' ||
-    item.itemCategoryHashes.some((itemHash) =>
-      D2SeasonToSource.categoryBlacklist.includes(itemHash)
-    )
-  ) {
-    return 0;
-  }
-
-  if (SourceToD2Season[item.source]) {
-    return SourceToD2Season[item.source];
-  }
-
-  return D2Seasons[item.hash] || D2CalculatedSeason || D2CurrentSeason;
 }
 
 function buildPursuitInfo(

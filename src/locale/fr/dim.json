@@ -5,10 +5,17 @@
   },
   "Accounts": {
     "Blizzard": "PC",
+    "ErrorLoadInventory": "Impossible de charger vos personnages et inventaire Destiny",
+    "ErrorLoadManifest": "Impossible de charger la base de données d'information de Destiny depuis Bungie",
+    "ErrorLoading": "Impossible de charger vos comptes Destiny depuis Bungie.net",
+    "MissingDescription": "Le compte que vous essayez de voir n'est pas un compte associé à votre profil Bungie.net.",
+    "MissingTitle": "Compte Introuvable",
     "NoCharacters": "Vous n'avez aucun personnage Destiny associé à ce compte Bungie.net. Essayez de vous connecter sur un compte différent.",
     "PlayStation": "PS4",
     "Stadia": "Stadia",
     "Steam": "Steam",
+    "UnlinkTwitch": "Lier votre compte Twitch à votre compte Bungie.net empêchera vos comptes D1 de fonctionner.",
+    "UnlinkTwitchButton": "Dissocier Twitch",
     "Xbox": "XB1"
   },
   "Activities": {
@@ -135,6 +142,9 @@
   },
   "ErrorBoundary": {
     "Title": "Une erreur s'est produite"
+  },
+  "ErrorPanel": {
+    "Description": "Ce problème affecte probablement toutes les applications tiers. Vérifiez si Bungie.net charge, ou si l'application compagnon de Destiny 2 fonctionne."
   },
   "FarmingMode": {
     "D2Desc": "DIM empêche les objets d'aller au commis des postes en s'assurant qu'il y aura toujours un espace vide par objet sur {{store}}. Il transfère les objets vers le coffre pour faire de la place.",
@@ -433,6 +443,10 @@
   },
   "LB": {
     "AdvancedOptions": "Options avancées",
+    "Chest": "Chest",
+    "ChooseAMod": "Choose your mods",
+    "ChooseAPerk": "Choose a perk",
+    "ClassItem": "Class Item",
     "ClearLocked": "Enlever verrouillés",
     "ContainsVendorItems": "Ce pré set contient des objets de marchand",
     "Current": "Actuel",
@@ -440,6 +454,9 @@
     "Exclude": "Objets exclus",
     "ExcludeHelp": "Shift + cliquez un objet (ou glissez-déposez dans cet espace) pour construire des sets sans équipement spécifique.",
     "FilterSets": "Filtrer les sets",
+    "Gauntlets": "Gauntlets",
+    "General": "General",
+    "Helmet": "Helmet",
     "Help": {
       "And": "L'armure avec n'importe lequel de ces atouts sera utilisé (\"et\")",
       "ChangeNodes": "Changer les bulles d'Intelligence, de Discipline ou de Force dans le jeu à ce qui est affiché pour créer chaque ensemble pré enregistré.",
@@ -461,6 +478,7 @@
     "HideAllConfigs": "Cacher toutes les configurations",
     "HideConfigs": "Cacher les configurations",
     "LB": "Optimiseur d'équipement",
+    "Legs": "Legs",
     "LightMode": {
       "HelpCurrent": "Calcule les pré sets à leur niveau de défense actuel.",
       "HelpScaled": "Calcule les pré sets comme si tous les objets avaient 350 de défense.",
@@ -472,6 +490,7 @@
     "Locked": "Objets verrouillés",
     "LockedHelp": "Glissez et déplacez un objet dans cet espace pour construire votre set avec cet équipement. Shift + clique pour exclure les objets.",
     "Missing2": "Pièces rares, légendaires ou exotiques manquantes pour construire un set complet!",
+    "ModLockButton": "Select mods",
     "ProcessingMode": {
       "Fast": "Rapide",
       "Full": "Complet",
@@ -480,10 +499,20 @@
       "ProcessingMode": "Mode de processing"
     },
     "Scaled": "Échelonné",
+    "SearchAMod": "Search a mod or description",
+    "Seasonal": "Seasonal",
     "ShowAllConfigs": "Afficher toutes les configurations",
     "ShowConfigs": "Afficher les configurations",
     "ShowGear": "Armure de {{class}}",
     "Vendor": "Inclure objets de marchands"
+  },
+  "Loading": {
+    "Accounts": "Loading Destiny accounts...",
+    "AuditLog": "Loading DIM Sync history...",
+    "Code": "Loading DIM code...",
+    "FilterHelp": "Loading search help...",
+    "Profile": "Loading Destiny profile...",
+    "Vendors": "Loading Destiny vendors..."
   },
   "LoadoutBuilder": {
     "AltPerkKey": "Choisissez cette compétence pour afficher les statistiques",
@@ -507,7 +536,7 @@
     "LimitedCombos": "Vous avez {{combosWithoutCaps, number}} combinaisons de stat possibles, mais nous avons seulement regardé {{combos, number}} d'entre elles pour empêcher DIM de crasher. Par conséquent, certaines possibilités ne sont pas affichées. Verrouillez des objets ou des compétences ou démantelez des armures pour passer en dessous de la limite.",
     "LockEquipped": "Équipé",
     "LockItem": "Verrouiller l'objet",
-    "LockPerk": "Sélectionner mod ou compétence",
+    "LockPerk": "Select energy or perk",
     "NewEmptyLoadout": "Créer une présélection vide",
     "NoBuildsFound": "Aucune présélection possible trouvé. Essayez d'augmenter vos critères de filtrage.",
     "NumStatMixes": "{{count, number}} mix de stat",
@@ -623,11 +652,10 @@
     "WeaponsOnly": "Armes"
   },
   "Manifest": {
-    "Build": "Base de données d'info de Destiny en cours de construction",
-    "Download": "Téléchargement en cours des derniers infos Destiny de Bungie",
-    "Error": "Erreur de chargement des infos de Destiny:\n{{error}}\nActualisez pour réessayer.",
-    "Load": "Chargement des données sauvegardées de Destiny",
-    "Outdated": "Infos Destiny expirées",
+    "Download": "Downloading latest Destiny info database from Bungie...",
+    "Error": "Error loading Destiny info database:\n{{error}}\nReload to retry.",
+    "Load": "Loading Destiny info database...",
+    "Outdated": "Outdated Destiny info database",
     "OutdatedExplanation": "Bungie a mis à jour les base de données de Destiny. Redémarrez DIM pour charger les nouvelles informations. Notez que certaines fonctionnalités de DIM peuvent ne pas fonctionner pendant quelques heures après que Bungie mette à jour Destiny, le temps que les nouvelles données se propagent dans leur système."
   },
   "Milestone": {
@@ -694,8 +722,43 @@
     "BulkMove": "Déplacer vers",
     "BulkMoveLoadoutName": "Sélectionné dans l'organisateur",
     "BulkTag": "Ajouter une balise",
+    "Columns": {
+      "Archetype": "Archetype",
+      "BaseStats": "Base Stats",
+      "CustomTotal": "Custom Total",
+      "Damage": "Damage",
+      "Element": "Element",
+      "Energy": "Energy",
+      "Event": "Event",
+      "Icon": "Icon",
+      "KillTracker": "Kill Tracker",
+      "Loadouts": "Loadouts",
+      "MasterworkStat": "Masterwork Stat",
+      "MasterworkTier": "Masterwork Tier",
+      "ModSlot": "Mod Slot",
+      "Mods": "Mods",
+      "Name": "Name",
+      "Notes": "Notes",
+      "Perks": "Perks",
+      "Rating": "Rating",
+      "Reacquireable": "Reacquireable",
+      "Season": "Season",
+      "Source": "Source",
+      "Stats": "Stats",
+      "Tag": "Tag",
+      "Tier": "Tier",
+      "WishList": "Wish List",
+      "WishListNotes": "Wish List Notes",
+      "Year": "Year"
+    },
     "EnabledColumns": "Colonnes activées",
-    "Organizer": "Organisateur"
+    "Lock": "Lock",
+    "NoMobile": "This view isn't great on mobile.",
+    "Organizer": "Organisateur",
+    "SelectAll": "Select All",
+    "SelectItem": "Select or unselect {{name}}",
+    "ShiftTip": "Tip: Hold the Shift key and click on a cell",
+    "Unlock": "Unlock"
   },
   "Progress": {
     "Bounties": "Contrats",
@@ -880,11 +943,6 @@
     "TagItems": "Ajouter une balise aux objets",
     "UnlockAll": "Déverrouillez les objets"
   },
-  "TrialsCard": {
-    "FiveWins": "Récompense à 5 Victoires (Armure)",
-    "Flawless": "Sans Défaite",
-    "SevenWins": "Récompense à 7 Victoires (Arme)"
-  },
   "Triumphs": {
     "HideCompleted": "Cache complété",
     "RevealRedacted": "Révéler édité"
@@ -901,8 +959,7 @@
     "DestinySets": "Parcourir plus de set d'objets sur Destiny Sets",
     "Engram": "Engramme de récompense",
     "FilterToUnacquired": "Afficher uniquement les objets non récupérés",
-    "Vendors": "Marchands",
-    "Year2Mods": "Mods de l'année 2"
+    "Vendors": "Marchands"
   },
   "Views": {
     "About": {
@@ -963,6 +1020,7 @@
     "ExternalSource": "Optionnellement, fournissez l'URL d'une liste de souhaits",
     "Header": "Liste de souhaits",
     "Import": "Charger listes de souhaits",
+    "ImportError": "Error loading wish list: {{error}}",
     "ImportFailed": "Aucune information de liste de souhaits trouvée.",
     "ImportNoFile": "Aucun fichier sélectionné.",
     "ImportSuccess": "Liste de souhait chargée avec des informations sur une version.{{titleAndDescription}}",

@@ -5,10 +5,17 @@
   },
   "Accounts": {
     "Blizzard": "PC",
+    "ErrorLoadInventory": "Unable to load your Destiny characters and inventory",
+    "ErrorLoadManifest": "Unable to load Destiny info database from Bungie",
+    "ErrorLoading": "Unable to load Destiny accounts from Bungie.net",
+    "MissingDescription": "The account you're trying to view is not an account linked to your Bungie.net profile.",
+    "MissingTitle": "Account Not Found",
     "NoCharacters": "沒有找到與此Bungie.net帳號相關聯的Destiny角色，登陸其它帳號試試看。",
     "PlayStation": "PS4",
     "Stadia": "Stadia",
     "Steam": "Steam",
+    "UnlinkTwitch": "Linking your Twitch account to Bungie.net will cause your D1 accounts to stop working.",
+    "UnlinkTwitchButton": "Unlink Twitch",
     "Xbox": "XB1"
   },
   "Activities": {
@@ -135,6 +142,9 @@
   },
   "ErrorBoundary": {
     "Title": "發生了一些錯誤"
+  },
+  "ErrorPanel": {
+    "Description": "This is likely an issue that affects all third-party apps. Check to see if Bungie.net loads, or the Destiny 2 Companion App works."
   },
   "FarmingMode": {
     "D2Desc": "為防止有物品被寄送到郵政官處，DIM將在您的 {{store}} 上的所有物品種類之間預留一個空位。已開始轉移物品到保險庫以騰出足夠的空間。",
@@ -433,6 +443,10 @@
   },
   "LB": {
     "AdvancedOptions": "高級選項",
+    "Chest": "Chest",
+    "ChooseAMod": "Choose your mods",
+    "ChooseAPerk": "Choose a perk",
+    "ClassItem": "Class Item",
     "ClearLocked": "清除鎖定",
     "ContainsVendorItems": "該配裝包含商販物品.",
     "Current": "當前",
@@ -440,6 +454,9 @@
     "Exclude": "已排除的物品",
     "ExcludeHelp": "Shift + 按一下一個物品(或直接拖動)用以創建一個不包括特定裝備的套裝組.",
     "FilterSets": "組合過濾",
+    "Gauntlets": "Gauntlets",
+    "General": "General",
+    "Helmet": "Helmet",
     "Help": {
       "And": "裝備了所有這些特性(Perk) 的防具將被使用(\"and\")",
       "ChangeNodes": "如要創建一個配裝,請改變智力,訓練和力量的比例,如圖所示.",
@@ -461,6 +478,7 @@
     "HideAllConfigs": "隱藏所有配置",
     "HideConfigs": "隱藏配置",
     "LB": "配裝優化器",
+    "Legs": "Legs",
     "LightMode": {
       "HelpCurrent": "計算當前防禦等級.",
       "HelpScaled": "計算使所有角色都都擁有350防禦.",
@@ -472,6 +490,7 @@
     "Locked": "鎖定的物品",
     "LockedHelp": "拖放物品到選擇框中用以創建一個套裝組.使用Shift +按一下可移除物品.",
     "Missing2": "缺少稀有,傳奇,或異域物品用來打造套裝!",
+    "ModLockButton": "Select mods",
     "ProcessingMode": {
       "Fast": "快速",
       "Full": "完全",
@@ -480,10 +499,20 @@
       "ProcessingMode": "處理模式"
     },
     "Scaled": "縮放",
+    "SearchAMod": "Search a mod or description",
+    "Seasonal": "Seasonal",
     "ShowAllConfigs": "顯示所有配置",
     "ShowConfigs": "顯示配置",
     "ShowGear": "{{class}} 防具",
     "Vendor": "包括商販物品"
+  },
+  "Loading": {
+    "Accounts": "Loading Destiny accounts...",
+    "AuditLog": "Loading DIM Sync history...",
+    "Code": "Loading DIM code...",
+    "FilterHelp": "Loading search help...",
+    "Profile": "Loading Destiny profile...",
+    "Vendors": "Loading Destiny vendors..."
   },
   "LoadoutBuilder": {
     "AltPerkKey": "選擇這項特性以使狀態取消顯示",
@@ -507,7 +536,7 @@
     "LimitedCombos": "您有{{combosWithoutCaps, number}} 可能性屬性組合, 但是我們只檢索了{{combos, number}} 個組合以避免DIM崩潰. 所以, 有些可能性組合沒有顯示. 鎖定一些物品或特性或者拆除一些舊(旧) 裝備来減少限制.",
     "LockEquipped": "已裝備",
     "LockItem": "鎖定物品",
-    "LockPerk": "選擇模組或裝備特長",
+    "LockPerk": "Select energy or perk",
     "NewEmptyLoadout": "創建配裝",
     "NoBuildsFound": "沒有找到配裝。請嘗試擴大你的篩檢程式範圍。",
     "NumStatMixes": "{{count, number}} 狀態混合",
@@ -623,11 +652,10 @@
     "WeaponsOnly": "武器"
   },
   "Manifest": {
-    "Build": "生成命運資訊資料庫",
-    "Download": "從Bungie下載最新的命運資料",
-    "Error": "命運資料載入錯誤:\n{{error}}\n請刷新重試.",
-    "Load": "載入保存的命運資料",
-    "Outdated": "過期的命運數據",
+    "Download": "Downloading latest Destiny info database from Bungie...",
+    "Error": "Error loading Destiny info database:\n{{error}}\nReload to retry.",
+    "Load": "Loading Destiny info database...",
+    "Outdated": "Outdated Destiny info database",
     "OutdatedExplanation": "Bungie更新了他們的Destiny資訊資料庫。重新載入DIM以獲取最新資訊。請注意，在Bungie更新Destiny之後的幾個小時內，在DIM中有些操作可能無法實現，因為新資料通過它們的系統傳播。"
   },
   "Milestone": {
@@ -694,8 +722,43 @@
     "BulkMove": "移動到",
     "BulkMoveLoadoutName": "已在管理器中選中",
     "BulkTag": "標籤",
+    "Columns": {
+      "Archetype": "Archetype",
+      "BaseStats": "Base Stats",
+      "CustomTotal": "Custom Total",
+      "Damage": "Damage",
+      "Element": "Element",
+      "Energy": "Energy",
+      "Event": "Event",
+      "Icon": "Icon",
+      "KillTracker": "Kill Tracker",
+      "Loadouts": "Loadouts",
+      "MasterworkStat": "Masterwork Stat",
+      "MasterworkTier": "Masterwork Tier",
+      "ModSlot": "Mod Slot",
+      "Mods": "Mods",
+      "Name": "Name",
+      "Notes": "Notes",
+      "Perks": "Perks",
+      "Rating": "Rating",
+      "Reacquireable": "Reacquireable",
+      "Season": "Season",
+      "Source": "Source",
+      "Stats": "Stats",
+      "Tag": "Tag",
+      "Tier": "Tier",
+      "WishList": "Wish List",
+      "WishListNotes": "Wish List Notes",
+      "Year": "Year"
+    },
     "EnabledColumns": "已啟用的列",
-    "Organizer": "管理器"
+    "Lock": "Lock",
+    "NoMobile": "This view isn't great on mobile.",
+    "Organizer": "管理器",
+    "SelectAll": "Select All",
+    "SelectItem": "Select or unselect {{name}}",
+    "ShiftTip": "Tip: Hold the Shift key and click on a cell",
+    "Unlock": "Unlock"
   },
   "Progress": {
     "Bounties": "賞金單",
@@ -880,11 +943,6 @@
     "TagItems": "標記物品",
     "UnlockAll": "解鎖物品"
   },
-  "TrialsCard": {
-    "FiveWins": "五連勝獎勵 (防具)",
-    "Flawless": "完美無瑕",
-    "SevenWins": "七連勝獎勵 (武器)"
-  },
   "Triumphs": {
     "HideCompleted": "隱藏已完成",
     "RevealRedacted": "顯示隱藏項目"
@@ -901,8 +959,7 @@
     "DestinySets": "在Destiny Set查看更多的裝備套組",
     "Engram": "獎勵記憶水晶",
     "FilterToUnacquired": "僅顯示未收集物品",
-    "Vendors": "商販",
-    "Year2Mods": "第2年的模組"
+    "Vendors": "商販"
   },
   "Views": {
     "About": {
@@ -963,6 +1020,7 @@
     "ExternalSource": "可選：提供願望清單的URL",
     "Header": "願望清單",
     "Import": "導入願望清單物品",
+    "ImportError": "Error loading wish list: {{error}}",
     "ImportFailed": "未找到任何願望清單",
     "ImportNoFile": "未選取任何檔案。",
     "ImportSuccess": "願望單加載了某物品的信息。{{titleAndDescription}}",

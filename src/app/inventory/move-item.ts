@@ -10,6 +10,9 @@ import { showNotification } from '../notifications/notifications';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { moveItemNotification } from './MoveNotifications';
 import { PlatformErrorCodes } from 'bungie-api-ts/common';
+import { getVault } from './stores-helpers';
+import { updateCharacters } from './d2-stores';
+import rxStore from '../store/store';
 
 /**
  * Move the item to the specified store. Equip it if equip is true.
@@ -29,8 +32,9 @@ export const moveItemTo = queuedAction(
         item = await movePromise;
 
         if (reload) {
+          // TODO: only reload the character that changed?
           // Refresh light levels and such
-          await item.getStoresService().updateCharacters();
+          await (rxStore.dispatch(updateCharacters()) as any);
         }
 
         item.updateManualMoveTimestamp();
@@ -58,11 +62,12 @@ export const moveItemTo = queuedAction(
 export const consolidate = queuedAction(
   loadingTracker.trackPromise(async (actionableItem: DimItem, store: DimStore) => {
     const storesService = actionableItem.getStoresService();
-    const stores = storesService.getStores().filter((s) => !s.isVault);
-    const vault = storesService.getVault()!;
+    const stores = storesService.getStores();
+    const characters = stores.filter((s) => !s.isVault);
+    const vault = getVault(stores)!;
 
     try {
-      for (const s of stores) {
+      for (const s of characters) {
         // First move everything into the vault
         const item = s.items.find(
           (i) => store.id !== i.owner && i.hash === actionableItem.hash && !i.location.inPostmaster
@@ -75,7 +80,7 @@ export const consolidate = queuedAction(
 
       // Then move from the vault to the character
       if (!store.isVault) {
-        const vault = storesService.getVault()!;
+        const vault = getVault(storesService.getStores())!;
         const item = vault.items.find(
           (i) => i.hash === actionableItem.hash && !i.location.inPostmaster
         );

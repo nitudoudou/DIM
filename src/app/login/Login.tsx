@@ -1,17 +1,21 @@
 import React, { useState } from 'react';
-import { Transition } from '@uirouter/react';
 import { t } from 'app/i18next-t';
 import { oauthClientId } from '../bungie-api/bungie-api-utils';
 import { v4 as uuidv4 } from 'uuid';
 import './login.scss';
 import HelpLink from 'app/dim-ui/HelpLink';
-import { dimApiHelpLink } from 'app/storage/DimApiSettings';
+import { useLocation } from 'react-router';
+import { parse } from 'simple-query-string';
 
-export default function Login({ transition }: { transition: Transition }) {
+const dimApiHelpLink =
+  'https://github.com/DestinyItemManager/DIM/wiki/DIM-Sync-(new-storage-for-tags,-loadouts,-and-settings)';
+
+export default function Login() {
+  const { search } = useLocation();
+  const { reauth } = parse(search);
   const authorizationState = uuidv4();
   localStorage.setItem('authorizationState', authorizationState);
   const clientId = oauthClientId();
-  const reauth = transition.params().reauth;
 
   const isStandalone =
     (window.navigator as any).standalone === true ||
@@ -58,7 +62,7 @@ export default function Login({ transition }: { transition: Transition }) {
             {t('Views.Login.Auth')}
           </a>
         </p>
-        <p className="help">
+        <div className="help">
           <input
             type="checkbox"
             id="apiPermissionGranted"
@@ -70,7 +74,7 @@ export default function Login({ transition }: { transition: Transition }) {
             {t('Storage.EnableDimApi')} <HelpLink helpLink={dimApiHelpLink} />
           </label>
           <div className="fineprint">{t('Storage.DimApiFinePrint')}</div>
-        </p>
+        </div>
         <p className="help">
           <a
             rel="noopener noreferrer"

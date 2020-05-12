@@ -1,18 +1,17 @@
 import {
   DestinyCharacterComponent,
   DestinyItemComponent,
-  DestinyStatDefinition,
   DestinyClass,
   DestinyGender
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { bungieNetPath } from '../../dim-ui/BungieImage';
 import { count } from '../../utils/util';
-import { D2ManifestDefinitions, LazyDefinition } from '../../destiny2/d2-definitions';
+import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 import vaultBackground from 'images/vault-background.svg';
 import vaultIcon from 'images/vault.svg';
 import { t } from 'app/i18next-t';
-import { D2Store, D2Vault, D2CharacterStat } from '../store-types';
+import { D2Store, D2Vault, DimCharacterStat } from '../store-types';
 import { D2Item } from '../item-types';
 import { D2StoresService } from '../d2-stores';
 import { armorStats } from './stats';
@@ -31,7 +30,7 @@ const genderTypeToEnglish = {
 
 // Prototype for Store objects - add methods to this to add them to all
 // stores.
-const StoreProto = {
+export const StoreProto = {
   /**
    * Get the total amount of this item in the store, across all stacks,
    * excluding stuff in the postmaster.
@@ -117,19 +116,6 @@ const StoreProto = {
     }
   },
 
-  updateCharacterInfo(
-    this: D2Store,
-    defs: D2ManifestDefinitions,
-    character: DestinyCharacterComponent
-  ) {
-    this.level = character.levelProgression.level; // Maybe?
-    this.powerLevel = character.light;
-    this.background = bungieNetPath(character.emblemBackgroundPath);
-    this.icon = bungieNetPath(character.emblemPath);
-    this.stats = { ...this.stats, ...getCharacterStatsData(defs.Stat, character.stats) };
-    this.color = character.emblemColor;
-  },
-
   // Remove an item from this store. Returns whether it actually removed anything.
   removeItem(this: D2Store, item: D2Item) {
     // Completely remove the source item
@@ -208,7 +194,7 @@ export function makeCharacter(
     percentToNextLevel:
       character.levelProgression.progressToNextLevel / character.levelProgression.nextLevelAt,
     powerLevel: character.light,
-    stats: getCharacterStatsData(defs.Stat, character.stats),
+    stats: getCharacterStatsData(defs, character.stats),
     classType: classy.classType,
     className,
     gender: genderLocalizedName,
@@ -292,26 +278,26 @@ export function makeVault(
  * Compute character-level stats.
  */
 export function getCharacterStatsData(
-  statDefs: LazyDefinition<DestinyStatDefinition>,
+  defs: D2ManifestDefinitions,
   stats: {
     [key: number]: number;
   }
-): { [hash: number]: D2CharacterStat } {
+): { [hash: number]: DimCharacterStat } {
   const statWhitelist = armorStats;
-  const ret: { [hash: number]: D2CharacterStat } = {};
+  const ret: { [hash: number]: DimCharacterStat } = {};
+
+  // TODO: Fill in effect and countdown for D2 stats
 
   // Fill in missing stats
   statWhitelist.forEach((statHash) => {
-    const def = statDefs.get(statHash);
+    const def = defs.Stat.get(statHash);
     const value = stats[statHash] || 0;
-    const stat: D2CharacterStat = {
-      id: statHash,
+    const stat: DimCharacterStat = {
+      hash: statHash,
       name: def.displayProperties.name,
       description: def.displayProperties.description,
       value,
-      icon: bungieNetPath(def.displayProperties.icon),
-      tiers: [value],
-      tierMax: 100
+      icon: bungieNetPath(def.displayProperties.icon)
     };
     ret[statHash] = stat;
   });

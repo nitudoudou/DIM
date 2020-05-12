@@ -5,8 +5,9 @@
   },
   "Accounts": {
     "Blizzard": "PC",
-    "ErrorLoadInventory": "Unable to load Destiny profile",
-    "ErrorLoading": "Unable to load Destiny Accounts from Bungie.net",
+    "ErrorLoadInventory": "Unable to load your Destiny characters and inventory",
+    "ErrorLoadManifest": "Unable to load Destiny info database from Bungie",
+    "ErrorLoading": "Unable to load Destiny accounts from Bungie.net",
     "MissingDescription": "The account you're trying to view is not an account linked to your Bungie.net profile.",
     "MissingTitle": "Account Not Found",
     "NoCharacters": "You have no Destiny characters associated with this Bungie.net account. Try logging into a different account.",
@@ -143,7 +144,7 @@
     "Title": "Something went wrong"
   },
   "ErrorPanel": {
-    "Description": "This is likely an issue that affects all third-party apps - check to see if Bungie.net or the Companion App works."
+    "Description": "This is likely an issue that affects all third-party apps. Check to see if Bungie.net loads, or the Destiny 2 Companion App works."
   },
   "FarmingMode": {
     "D2Desc": "DIM is preventing items from going to the Postmaster by making sure there's always one empty space per item type on {{store}}. It is moving items to the vault to make room.",
@@ -442,6 +443,10 @@
   },
   "LB": {
     "AdvancedOptions": "Advanced Options",
+    "Chest": "Chest",
+    "ChooseAMod": "Choose your mods",
+    "ChooseAPerk": "Choose a perk",
+    "ClassItem": "Class Item",
     "ClearLocked": "Clear Locked",
     "ContainsVendorItems": "This loadout contains vendor items",
     "Current": "Current",
@@ -449,6 +454,9 @@
     "Exclude": "Excluded Items",
     "ExcludeHelp": "Shift + click an item (or drag and drop into this bucket) to build sets without specific gear.",
     "FilterSets": "Filter sets",
+    "Gauntlets": "Gauntlets",
+    "General": "General",
+    "Helmet": "Helmet",
     "Help": {
       "And": "Armor with all of these perks will be used (\"and\")",
       "ChangeNodes": "Change the Intellect, Discipline, or Strength nodes in game to what is displayed to create each loadout.",
@@ -470,6 +478,7 @@
     "HideAllConfigs": "Hide all configurations",
     "HideConfigs": "Hide configurations",
     "LB": "Loadout Optimizer",
+    "Legs": "Legs",
     "LightMode": {
       "HelpCurrent": "Calculates loadouts at current defense levels.",
       "HelpScaled": "Calculates loadouts as if all items were 350 defense.",
@@ -481,6 +490,7 @@
     "Locked": "Locked Items",
     "LockedHelp": "Drag and drop any item into its bucket to build set with that specific gear. Shift + click to exclude items.",
     "Missing2": "Missing rare, legendary, or exotic pieces to build a full set!",
+    "ModLockButton": "Select mods",
     "ProcessingMode": {
       "Fast": "Fast",
       "Full": "Full",
@@ -489,10 +499,20 @@
       "ProcessingMode": "Processing mode"
     },
     "Scaled": "Scaled",
+    "SearchAMod": "Search a mod or description",
+    "Seasonal": "Seasonal",
     "ShowAllConfigs": "Show all configurations",
     "ShowConfigs": "Show configurations",
     "ShowGear": "{{class}} Armor",
     "Vendor": "Include Vendor items"
+  },
+  "Loading": {
+    "Accounts": "Loading Destiny accounts...",
+    "AuditLog": "Loading DIM Sync history...",
+    "Code": "Loading DIM code...",
+    "FilterHelp": "Loading search help...",
+    "Profile": "Loading Destiny profile...",
+    "Vendors": "Loading Destiny vendors..."
   },
   "LoadoutBuilder": {
     "AltPerkKey": "Choose this perk to get the stats displayed",
@@ -516,7 +536,7 @@
     "LimitedCombos": "You have {{combosWithoutCaps, number}} possible stat combinations, but we only looked at {{combos, number}} of them to keep DIM from crashing. As a result, some possibilities are not shown. Lock some items or perks or dismantle some old armor to get under the limit.",
     "LockEquipped": "Equipped",
     "LockItem": "Lock item",
-    "LockPerk": "Select mod or perk",
+    "LockPerk": "Select energy or perk",
     "NewEmptyLoadout": "Create Empty Loadout",
     "NoBuildsFound": "No builds found. Try expanding your filtering criteria.",
     "NumStatMixes": "{{count, number}} stat mix",
@@ -632,11 +652,10 @@
     "WeaponsOnly": "Weapons"
   },
   "Manifest": {
-    "Build": "Building Destiny info database",
-    "Download": "Downloading latest Destiny info from Bungie",
-    "Error": "Error loading Destiny info:\n{{error}}\nReload to retry.",
-    "Load": "Loading saved Destiny info",
-    "Outdated": "Outdated Destiny Info",
+    "Download": "Downloading latest Destiny info database from Bungie...",
+    "Error": "Error loading Destiny info database:\n{{error}}\nReload to retry.",
+    "Load": "Loading Destiny info database...",
+    "Outdated": "Outdated Destiny info database",
     "OutdatedExplanation": "Bungie has updated their Destiny info database. Reload DIM to pick up the new info. Note that some things in DIM may not work for a few hours after Bungie updates Destiny, as the new data propagates through their systems."
   },
   "Milestone": {
@@ -703,8 +722,43 @@
     "BulkMove": "Move To",
     "BulkMoveLoadoutName": "Selected in Organizer",
     "BulkTag": "Tag",
+    "Columns": {
+      "Archetype": "Archetype",
+      "BaseStats": "Base Stats",
+      "CustomTotal": "Custom Total",
+      "Damage": "Damage",
+      "Element": "Element",
+      "Energy": "Energy",
+      "Event": "Event",
+      "Icon": "Icon",
+      "KillTracker": "Kill Tracker",
+      "Loadouts": "Loadouts",
+      "MasterworkStat": "Masterwork Stat",
+      "MasterworkTier": "Masterwork Tier",
+      "ModSlot": "Mod Slot",
+      "Mods": "Mods",
+      "Name": "Name",
+      "Notes": "Notes",
+      "Perks": "Perks",
+      "Rating": "Rating",
+      "Reacquireable": "Reacquireable",
+      "Season": "Season",
+      "Source": "Source",
+      "Stats": "Stats",
+      "Tag": "Tag",
+      "Tier": "Tier",
+      "WishList": "Wish List",
+      "WishListNotes": "Wish List Notes",
+      "Year": "Year"
+    },
     "EnabledColumns": "Enabled Columns",
-    "Organizer": "Organizer"
+    "Lock": "Lock",
+    "NoMobile": "This view isn't great on mobile.",
+    "Organizer": "Organizer",
+    "SelectAll": "Select All",
+    "SelectItem": "Select or unselect {{name}}",
+    "ShiftTip": "Tip: Hold the Shift key and click on a cell",
+    "Unlock": "Unlock"
   },
   "Progress": {
     "Bounties": "Bounties",
@@ -889,11 +943,6 @@
     "TagItems": "Tag Items",
     "UnlockAll": "Unlock Items"
   },
-  "TrialsCard": {
-    "FiveWins": "5 Win Reward (Armor)",
-    "Flawless": "Flawless",
-    "SevenWins": "7 Win Reward (Weapon)"
-  },
   "Triumphs": {
     "HideCompleted": "Hide Completed",
     "RevealRedacted": "Reveal Redacted"
@@ -971,6 +1020,7 @@
     "ExternalSource": "Optionally, supply the URL for a wish list",
     "Header": "Wish List",
     "Import": "Load Wish List Rolls",
+    "ImportError": "Error loading wish list: {{error}}",
     "ImportFailed": "No wish list information found.",
     "ImportNoFile": "No file selected.",
     "ImportSuccess": "Wish list loaded with information about one roll.{{titleAndDescription}}",

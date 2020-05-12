@@ -20,7 +20,7 @@ export const getStore = <Store extends DimStore>(stores: Store[], id: string) =>
 /**
  * Get the Vault from a list of stores.
  */
-export const getVault = (stores: DimStore[]) =>
+export const getVault = (stores: DimStore[]): DimVault | undefined =>
   stores.find((s) => s.isVault) as DimVault | undefined;
 
 /**
@@ -57,4 +57,10 @@ export function getItemAcrossStores<Item extends DimItem, Store extends DimStore
     }
   }
   return undefined;
+}
+
+/** Get the bonus power from the Seasonal Artifact */
+export function getArtifactBonus(store: DimStore) {
+  const artifact = (store.buckets[1506418338] || []).find((i) => i.equipped);
+  return artifact?.primStat?.value || 0;
 }

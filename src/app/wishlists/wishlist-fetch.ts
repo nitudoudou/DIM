@@ -5,9 +5,11 @@ import { showNotification } from 'app/notifications/notifications';
 import { loadWishLists } from './actions';
 import { ThunkResult } from 'app/store/reducers';
 import { WishListAndInfo } from './types';
-import { wishListsSelector } from './reducer';
+import { wishListsSelector, WishListsState } from './reducer';
 import { settingsSelector } from 'app/settings/reducer';
 import { setSetting } from 'app/settings/actions';
+import { get } from 'idb-keyval';
+import { settingsReady } from 'app/settings/settings';
 
 function hoursAgo(dateToCheck?: Date): number {
   if (!dateToCheck) {
@@ -19,8 +21,11 @@ function hoursAgo(dateToCheck?: Date): number {
 
 export function fetchWishList(newWishlistSource?: string): ThunkResult {
   return async (dispatch, getState) => {
+    await dispatch(loadWishListAndInfoFromIndexedDB());
     if (newWishlistSource) {
       dispatch(setSetting('wishListSource', newWishlistSource));
+    } else {
+      await settingsReady;
     }
 
     const wishListSource = settingsSelector(getState()).wishListSource;
@@ -30,9 +35,16 @@ export function fetchWishList(newWishlistSource?: string): ThunkResult {
     }
 
     const wishListLastUpdated = wishListsSelector(getState()).lastFetched;
+    const existingWishListSource = wishListsSelector(getState()).wishListAndInfo.source;
 
     // Don't throttle updates if we're changing source
-    if (!newWishlistSource && hoursAgo(wishListLastUpdated) < 24) {
+    if (
+      !newWishlistSource &&
+      hoursAgo(wishListLastUpdated) < 24 &&
+      // Allow changes to settings to cause wish list updates - if the source is different
+      // from the existing source we'll continue to load even if we're within the window
+      (existingWishListSource === undefined || existingWishListSource === wishListSource)
+    ) {
       return;
     }
 
@@ -40,6 +52,7 @@ export function fetchWishList(newWishlistSource?: string): ThunkResult {
     const wishListText = await wishListResponse.text();
 
     const wishListAndInfo = toWishList(wishListText);
+    wishListAndInfo.source = wishListSource;
 
     const existingWishLists = wishListsSelector(getState());
 
@@ -59,7 +72,7 @@ export function fetchWishList(newWishlistSource?: string): ThunkResult {
 export function transformAndStoreWishList(wishListAndInfo: WishListAndInfo): ThunkResult {
   return async (dispatch) => {
     if (wishListAndInfo.wishListRolls.length > 0) {
-      dispatch(loadWishLists({ wishList: wishListAndInfo }));
+      dispatch(loadWishLists({ wishListAndInfo }));
 
       const titleAndDescription = _.compact([
         wishListAndInfo.title,
@@ -80,6 +93,29 @@ export function transformAndStoreWishList(wishListAndInfo: WishListAndInfo): Thu
         title: t('WishListRoll.Header'),
         body: t('WishListRoll.ImportFailed')
       });
+    }
+  };
+}
+
+function loadWishListAndInfoFromIndexedDB(): ThunkResult {
+  return async (dispatch, getState) => {
+    if (getState().wishLists.loaded) {
+      return;
+    }
+
+    const wishListState = await get<WishListsState>('wishlist');
+
+    if (getState().wishLists.loaded) {
+      return;
+    }
+
+    if (wishListState?.wishListAndInfo?.wishListRolls?.length) {
+      dispatch(
+        loadWishLists({
+          lastFetched: wishListState.lastFetched,
+          wishListAndInfo: wishListState.wishListAndInfo
+        })
+      );
     }
   };
 }

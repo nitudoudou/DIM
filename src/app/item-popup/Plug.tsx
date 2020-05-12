@@ -46,10 +46,7 @@ export default function Plug({
   }
 
   const energyType =
-    (modDef &&
-      modDef.plug &&
-      modDef.plug.energyCost &&
-      modDef.plug.energyCost.energyTypeHash &&
+    (modDef?.plug?.energyCost?.energyTypeHash &&
       defs.EnergyType.get(modDef.plug.energyCost.energyTypeHash)) ||
     undefined;
   const energyCostStat = energyType && defs.Stat.get(energyType.costStatHash);
@@ -84,7 +81,7 @@ export default function Plug({
       {costElementIcon && (
         <>
           <div
-            style={{ backgroundImage: `url(${bungieNetPath(costElementIcon)}` }}
+            style={{ backgroundImage: `url("${bungieNetPath(costElementIcon)}")` }}
             className="energyCostOverlay"
           />
           <div className="energyCost">{modDef.plug.energyCost.energyCost}</div>

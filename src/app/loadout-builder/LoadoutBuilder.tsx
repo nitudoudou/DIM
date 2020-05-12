@@ -1,4 +1,3 @@
-import { UIViewInjectedProps } from '@uirouter/react';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
@@ -6,13 +5,20 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { DestinyAccount } from '../accounts/destiny-account';
 import CharacterSelect from '../dim-ui/CharacterSelect';
-import { Loading } from '../dim-ui/Loading';
 import { D2StoresService } from '../inventory/d2-stores';
 import { DimStore, D2Store } from '../inventory/store-types';
 import { RootState } from '../store/reducers';
 import GeneratedSets from './generated-sets/GeneratedSets';
 import { filterGeneratedSets, isLoadoutBuilderItem } from './generated-sets/utils';
-import { ArmorSet, StatTypes, ItemsByBucket, LockedMap, MinMaxIgnored } from './types';
+import {
+  ArmorSet,
+  StatTypes,
+  ItemsByBucket,
+  LockedMap,
+  MinMaxIgnored,
+  LockedArmor2ModMap,
+  ModPickerCategories
+} from './types';
 import { sortedStoresSelector, storesLoadedSelector, storesSelector } from '../inventory/selectors';
 import { process, filterItems, statKeys } from './process';
 import { createSelector } from 'reselect';
@@ -36,6 +42,8 @@ import { Subscriptions } from 'app/utils/rx-utils';
 import { refresh$ } from 'app/shell/refresh';
 import { queueAction } from 'app/inventory/action-queue';
 import ErrorPanel from 'app/shell/ErrorPanel';
+import { getCurrentStore } from 'app/inventory/stores-helpers';
+import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 
 interface ProvidedProps {
   account: DestinyAccount;
@@ -57,6 +65,7 @@ type Props = ProvidedProps & StoreProps;
 
 interface State {
   lockedMap: LockedMap;
+  lockedArmor2Mods: LockedArmor2ModMap;
   selectedStoreId?: string;
   statFilters: Readonly<{ [statType in StatTypes]: MinMaxIgnored }>;
   minimumPower: number;
@@ -113,7 +122,7 @@ function mapStateToProps() {
 /**
  * The Loadout Optimizer screen
  */
-export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps, State> {
+class LoadoutBuilder extends React.Component<Props, State> {
   private subscriptions = new Subscriptions();
   private filterItemsMemoized = memoizeOne(filterItems);
   private filterSetsMemoized = memoizeOne(filterGeneratedSets);
@@ -135,10 +144,19 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
         Intellect: { min: 0, max: 10, ignored: false },
         Strength: { min: 0, max: 10, ignored: false }
       },
+      lockedArmor2Mods: {
+        [ModPickerCategories.general]: [],
+        [ModPickerCategories.helmet]: [],
+        [ModPickerCategories.gauntlets]: [],
+        [ModPickerCategories.chest]: [],
+        [ModPickerCategories.leg]: [],
+        [ModPickerCategories.classitem]: [],
+        [ModPickerCategories.seasonal]: []
+      },
       minimumPower: 750,
       query: '',
       statOrder: statKeys,
-      selectedStoreId: props.storesLoaded ? props.stores.find((s) => s.current)!.id : undefined,
+      selectedStoreId: getCurrentStore(props.stores)?.id,
       assumeMasterwork: false
     };
   }
@@ -151,7 +169,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
         }
 
         if (!this.state.selectedStoreId) {
-          this.onCharacterChanged(stores.find((s) => s.current)!.id);
+          this.onCharacterChanged(getCurrentStore(stores)!.id);
         }
       }),
 
@@ -176,6 +194,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
     } = this.props;
     const {
       lockedMap,
+      lockedArmor2Mods,
       selectedStoreId,
       statFilters,
       minimumPower,
@@ -185,13 +204,13 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
     } = this.state;
 
     if (!storesLoaded || !defs || !selectedStoreId) {
-      return <Loading />;
+      return <ShowPageLoading message={t('Loading.Profile')} />;
     }
 
     const store = stores.find((s) => s.id === selectedStoreId)!;
 
     if (!items[store.classType]) {
-      return <Loading />;
+      return <ShowPageLoading message={t('Loading.Profile')} />;
     }
 
     const filter = filters.filterFunction(query);
@@ -205,7 +224,13 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
     const enabledStats = this.getEnabledStats(statFilters);
     try {
       filteredItems = this.filterItemsMemoized(items[store.classType], lockedMap, filter);
-      const result = this.processMemoized(filteredItems, lockedMap, store.id, assumeMasterwork);
+      const result = this.processMemoized(
+        filteredItems,
+        lockedMap,
+        lockedArmor2Mods,
+        store.id,
+        assumeMasterwork
+      );
       processedSets = result.sets;
       combos = result.combos;
       combosWithoutCaps = result.combosWithoutCaps;
@@ -213,6 +238,7 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
         processedSets,
         minimumPower,
         lockedMap,
+        lockedArmor2Mods,
         statFilters,
         statOrder,
         enabledStats
@@ -248,7 +274,9 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
           items={filteredItems}
           selectedStore={store}
           lockedMap={lockedMap}
+          lockedArmor2Mods={lockedArmor2Mods}
           onLockedMapChanged={this.onLockedMapChanged}
+          onArmor2ModsChanged={this.onArmor2ModsChanged}
         />
       </div>
     );
@@ -326,6 +354,9 @@ export class LoadoutBuilder extends React.Component<Props & UIViewInjectedProps,
   private onStatOrderChanged = (statOrder: StatTypes[]) => this.setState({ statOrder });
 
   private onLockedMapChanged = (lockedMap: State['lockedMap']) => this.setState({ lockedMap });
+
+  private onArmor2ModsChanged = (lockedArmor2Mods: LockedArmor2ModMap) =>
+    this.setState({ lockedArmor2Mods });
 
   private onMasterworkAssumptionChange = (assumeMasterwork: boolean) =>
     this.setState({ assumeMasterwork });

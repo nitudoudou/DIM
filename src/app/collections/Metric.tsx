@@ -5,11 +5,12 @@ import {
   DestinyMetricDefinition,
   DestinyMetricComponent
 } from 'bungie-api-ts/destiny2';
-import BungieImage from '../dim-ui/BungieImage';
 import _ from 'lodash';
 import styles from './Metric.m.scss';
-import masterworkOverlay from 'images/masterwork-metric.png';
 import clsx from 'clsx';
+import MetricBanner from './MetricBanner';
+import RichDestinyText from 'app/dim-ui/RichDestinyText';
+import { ObjectiveValue } from 'app/progress/Objective';
 
 interface Props {
   metricHash: number;
@@ -30,34 +31,36 @@ export default function Metric({ metricHash, defs, profileResponse }: Props) {
 
   const name = metricDef.displayProperties.name;
   const description = metricDef.displayProperties.description;
-  const metricIcon = metricDef.displayProperties.icon;
-
-  const metricScope = metricDef.traitHashes
-    .filter((h) => h !== 1434215347)
-    .map((h) => defs.Trait.get(h))[0];
-  const parentNode = defs.PresentationNode.get(metricDef.parentNodeHashes[0]);
-
-  const bannerIcon = parentNode.displayProperties.icon;
-  const scopeIcon = metricScope.displayProperties.iconSequences[0].frames[2];
 
   const masterwork = metric.objectiveProgress.complete;
 
+  const objectiveDef = defs.Objective.get(metric.objectiveProgress.objectiveHash);
+
   return (
     <div className={styles.metric}>
-      <div className={styles.icon}>
-        <BungieImage className={styles.bannerIcon} src={bannerIcon} />
-        {masterwork && <img src={masterworkOverlay} className={styles.bannerIcon} loading="lazy" />}
-        <BungieImage className={styles.scopeIcon} src={scopeIcon} />
-        <BungieImage className={styles.metricIcon} src={metricIcon} />
-      </div>
+      <MetricBanner
+        className={styles.icon}
+        metricHash={metricHash}
+        defs={defs}
+        objectiveProgress={metric.objectiveProgress}
+      />
       <div className={clsx(styles.header, { [styles.masterworked]: masterwork })}>
         <div className={styles.name}>{name}</div>
         <div className={styles.value}>
-          {(metric.objectiveProgress.progress || 0).toLocaleString()}
+          <ObjectiveValue
+            objectiveDef={objectiveDef}
+            progress={metric.objectiveProgress.progress || 0}
+          />
         </div>
       </div>
 
-      <div>{description && <p>{description}</p>}</div>
+      <div>
+        {description && (
+          <p className={styles.description}>
+            <RichDestinyText text={description} defs={defs} />
+          </p>
+        )}
+      </div>
     </div>
   );
 }

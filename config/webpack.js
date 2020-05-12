@@ -16,6 +16,10 @@ const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const csp = require('./content-security-policy');
 const PacktrackerPlugin = require('@packtracker/webpack-plugin');
 const browserslist = require('browserslist');
+const ForkTsCheckerNotifierWebpackPlugin = require('fork-ts-checker-notifier-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const svgToMiniDataURI = require('mini-svg-data-uri');
+const _ = require('lodash');
 
 const Visualizer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -100,7 +104,7 @@ module.exports = (env) => {
       runtimeChunk: 'single',
       splitChunks: {
         chunks(chunk) {
-          return chunk !== 'browsercheck';
+          return chunk.name !== 'browsercheck';
         },
         automaticNameDelimiter: '-'
       },
@@ -127,10 +131,14 @@ module.exports = (env) => {
         {
           test: /\.js$/,
           exclude: [/node_modules/, /browsercheck\.js$/],
-          loader: 'babel-loader',
-          options: {
-            cacheDirectory: true
-          }
+          use: [
+            {
+              loader: 'babel-loader',
+              options: {
+                cacheDirectory: true
+              }
+            }
+          ]
         },
         {
           test: /\.html$/,
@@ -141,7 +149,25 @@ module.exports = (env) => {
           }
         },
         {
-          test: /\.(jpg|gif|png|eot|svg|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
+          // Optimize SVGs - mostly for destiny-icons.
+          test: /\.svg$/,
+          use: [
+            {
+              loader: 'url-loader',
+              options: {
+                limit: 5 * 1024, // only inline if less than 5kb
+                name: ASSET_NAME_PATTERN,
+                // Use smaller data URIs
+                generator: (content) => svgToMiniDataURI(content.toString())
+              }
+            },
+            {
+              loader: 'svgo-loader'
+            }
+          ]
+        },
+        {
+          test: /\.(jpg|gif|png|eot|ttf|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
           loader: 'url-loader',
           options: {
             limit: 5 * 1024, // only inline if less than 5kb
@@ -194,20 +220,22 @@ module.exports = (env) => {
           test: /\.css$/,
           use: [env.dev ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader']
         },
-        // All files with a '.ts' or '.tsx' extension will be handled by 'ts-loader'.
+        // All files with a '.ts' or '.tsx' extension will be handled by 'babel-loader'.
         {
           test: /\.tsx?$/,
-          use: [
+          use: _.compact([
             {
               loader: 'babel-loader',
               options: {
                 cacheDirectory: true
               }
             },
-            {
-              loader: 'ts-loader'
-            }
-          ]
+            env.dev
+              ? null
+              : {
+                  loader: 'ts-loader'
+                }
+          ])
         },
         // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
         {
@@ -236,7 +264,7 @@ module.exports = (env) => {
         }
       ],
 
-      noParse: function(path) {
+      noParse: function (path) {
         return false;
       }
     },
@@ -343,10 +371,6 @@ module.exports = (env) => {
         '$featureFlags.debugSync': JSON.stringify(!env.release),
         // Enable color-blind a11y
         '$featureFlags.colorA11y': JSON.stringify(true),
-        // Whether to log page views for router events
-        '$featureFlags.googleAnalyticsForRouter': JSON.stringify(true),
-        // Debug ui-router
-        '$featureFlags.debugRouter': JSON.stringify(false),
         // Debug Service Worker
         '$featureFlags.debugSW': JSON.stringify(!env.release),
         // Send exception reports to Sentry.io on beta only
@@ -360,7 +384,7 @@ module.exports = (env) => {
         // Notifications for item moves
         '$featureFlags.moveNotifications': JSON.stringify(true),
         // Item organizer
-        '$featureFlags.organizer': JSON.stringify(env.dev),
+        '$featureFlags.organizer': JSON.stringify(!env.release),
         // Enable vendorengrams.xyz integration
         '$featureFlags.vendorEngrams': JSON.stringify(true),
         // Enable the new DIM API
@@ -398,10 +422,25 @@ module.exports = (env) => {
   }
 
   if (env.dev) {
+    // In dev we use babel to compile TS, and fork off a separate typechecker
+    config.plugins.push(
+      new ForkTsCheckerWebpackPlugin({
+        eslint: true
+      })
+    );
+
     config.plugins.push(
       new WebpackNotifierPlugin({
         title: 'DIM',
+        excludeWarnings: false,
         alwaysNotify: true,
+        contentImage: path.join(__dirname, '../icons/release/favicon-96x96.png')
+      })
+    );
+    config.plugins.push(
+      new ForkTsCheckerNotifierWebpackPlugin({
+        title: 'DIM TypeScript',
+        excludeWarnings: false,
         contentImage: path.join(__dirname, '../icons/release/favicon-96x96.png')
       })
     );
@@ -415,7 +454,7 @@ module.exports = (env) => {
     // env.beta and env.release
     config.plugins.push(
       new CleanWebpackPlugin({
-        cleanOnceBeforeBuildPatterns: ['.awcache', 'node_modules/.cache']
+        cleanOnceBeforeBuildPatterns: ['node_modules/.cache']
       }),
 
       // Tell React we're in Production mode

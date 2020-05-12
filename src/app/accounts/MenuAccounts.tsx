@@ -1,16 +1,18 @@
 import React from 'react';
-import { removeToken } from '../bungie-api/oauth-tokens';
 import './Account.scss';
 import { DestinyAccount } from './destiny-account';
-import { UISref } from '@uirouter/react';
-import { router } from '../router';
 import { AppIcon, signOutIcon } from '../shell/icons';
 import { currentAccountSelector } from './reducer';
-import { RootState } from '../store/reducers';
+import { RootState, ThunkDispatchProp } from '../store/reducers';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Account from './Account';
 import { t } from 'app/i18next-t';
 import _ from 'lodash';
+import { logOut } from './platforms';
+import { accountRoute } from 'app/routes';
+import styles from './MenuAccounts.m.scss';
+import clsx from 'clsx';
 
 interface ProvidedProps {
   closeDropdown(e: React.MouseEvent<HTMLDivElement>): void;
@@ -28,37 +30,31 @@ function mapStateToProps(state: RootState): StoreProps {
   };
 }
 
-type Props = ProvidedProps & StoreProps;
+type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
 
-function MenuAccounts({ currentAccount, closeDropdown, accounts }: Props) {
+function MenuAccounts({ currentAccount, closeDropdown, accounts, dispatch }: Props) {
   if (!currentAccount) {
     return null;
   }
 
   const sortedAccounts = _.sortBy(accounts, (a) => -(a.lastPlayed?.getTime() || 0));
 
-  const logOut = () => {
-    removeToken();
-    router.stateService.go('login', { reauth: true });
-  };
-
   return (
-    <div className="account-select">
+    <div className={styles.accountSelect}>
       <h3>Accounts</h3>
       {sortedAccounts.map((account) => (
-        <UISref
+        <Link
           key={`${account.membershipId}-${account.destinyVersion}`}
-          to={account.destinyVersion === 1 ? 'destiny1' : 'destiny2'}
-          params={account}
+          to={`${accountRoute(account)}/inventory`}
         >
           <Account
             className={account === currentAccount ? 'selected-account' : ''}
             account={account}
             onClick={closeDropdown}
           />
-        </UISref>
+        </Link>
       ))}
-      <div className="account log-out" onClick={logOut}>
+      <div className={clsx('account', styles.logout)} onClick={() => dispatch(logOut())}>
         <AppIcon icon={signOutIcon} />
         &nbsp;
         {t('Settings.LogOut')}

@@ -5,10 +5,17 @@
   },
   "Accounts": {
     "Blizzard": "PC",
+    "ErrorLoadInventory": "Unable to load your Destiny characters and inventory",
+    "ErrorLoadManifest": "Unable to load Destiny info database from Bungie",
+    "ErrorLoading": "Unable to load Destiny accounts from Bungie.net",
+    "MissingDescription": "The account you're trying to view is not an account linked to your Bungie.net profile.",
+    "MissingTitle": "Account Not Found",
     "NoCharacters": "Nie posiadasz żadnych postaci z Destiny powiązanych z tym kontem Bungie.net. Spróbuj zalogować się na inne konto.",
     "PlayStation": "PS4",
     "Stadia": "Stadia",
     "Steam": "Steam",
+    "UnlinkTwitch": "Linking your Twitch account to Bungie.net will cause your D1 accounts to stop working.",
+    "UnlinkTwitchButton": "Unlink Twitch",
     "Xbox": "XB1"
   },
   "Activities": {
@@ -135,6 +142,9 @@
   },
   "ErrorBoundary": {
     "Title": "Coś poszło nie tak"
+  },
+  "ErrorPanel": {
+    "Description": "This is likely an issue that affects all third-party apps. Check to see if Bungie.net loads, or the Destiny 2 Companion App works."
   },
   "FarmingMode": {
     "D2Desc": "DIM zapobiega przedmiotom dostawanie się do Kuriera poprzez upewnianie się, że na {{store}} zawsze jest jedno miejsce wolne na dany typ przedmiotu. Przenosi on przedmioty do schowka aby zrobić miejsce.",
@@ -433,6 +443,10 @@
   },
   "LB": {
     "AdvancedOptions": "Ustawienia Zaawansowane",
+    "Chest": "Chest",
+    "ChooseAMod": "Choose your mods",
+    "ChooseAPerk": "Choose a perk",
+    "ClassItem": "Class Item",
     "ClearLocked": "Wyczyść Zablokowane",
     "ContainsVendorItems": "Te uzbrojenie zawiera przedmioty sprzedawcy",
     "Current": "Aktualny",
@@ -440,6 +454,9 @@
     "Exclude": "Wykluczone przedmioty",
     "ExcludeHelp": "Shift + kliknij na przedmiot (lub przeciągnij i upuść do tego wiaderka) aby tworzyć zestawy bez konkretnego sprzętu.",
     "FilterSets": "Zbiory filtrów",
+    "Gauntlets": "Gauntlets",
+    "General": "General",
+    "Helmet": "Helmet",
     "Help": {
       "And": "Pancerz z każdym z tych perków będzie użyty (\"and\")",
       "ChangeNodes": "Zmień węzły Intelektu, Dyscypliny lub Siły w grze na to, co jest pokazane aby utworzyć każde uzbrojenie.",
@@ -461,6 +478,7 @@
     "HideAllConfigs": "Ukryj wszystkie konfiguracje",
     "HideConfigs": "Ukryj konfiguracje",
     "LB": "Optymalizator Uzbrojenia",
+    "Legs": "Legs",
     "LightMode": {
       "HelpCurrent": "Kalkuluje uzbrojenia na obecnych poziomach obrony.",
       "HelpScaled": "Kalkuluje uzbrojenia jak gdyby wszystkie przedmioty miały 350 obrony.",
@@ -472,6 +490,7 @@
     "Locked": "Zablokowane Przedmioty",
     "LockedHelp": "Przeciągnij i upuść dowolny przedmiot do jego wiaderka aby tworzyć zestaw z tym konkretnym sprzętem. Shift + kliknij aby wykluczyć przedmioty.",
     "Missing2": "Brakuje rzadkich, legendarnych lub egzotycznych części aby stworzyć pełny zestaw!",
+    "ModLockButton": "Select mods",
     "ProcessingMode": {
       "Fast": "Szybki",
       "Full": "Pełny",
@@ -480,10 +499,20 @@
       "ProcessingMode": "Tryb przetwarzania"
     },
     "Scaled": "Skalowany",
+    "SearchAMod": "Search a mod or description",
+    "Seasonal": "Seasonal",
     "ShowAllConfigs": "Pokaż wszystkie konfiguracje",
     "ShowConfigs": "Pokaż konfiguracje",
     "ShowGear": "Pancerz {{class}}",
     "Vendor": "Uwzględnij przedmioty Sprzedawcy"
+  },
+  "Loading": {
+    "Accounts": "Loading Destiny accounts...",
+    "AuditLog": "Loading DIM Sync history...",
+    "Code": "Loading DIM code...",
+    "FilterHelp": "Loading search help...",
+    "Profile": "Loading Destiny profile...",
+    "Vendors": "Loading Destiny vendors..."
   },
   "LoadoutBuilder": {
     "AltPerkKey": "Wybierz ten perk aby wyświetlić statystyki",
@@ -507,7 +536,7 @@
     "LimitedCombos": "Masz {{combosWithoutCaps, number}} możliwe kombinacje statystyk, ale przyjrzeliśmy się tylko {{combos, number}} z nich, aby powstrzymać DIM przed awarią. W rezultacie niektóre możliwości nie są wyświetlane. Zablokuj niektóre przedmioty lub perki lub zdemontuj stary pancerz, aby dostać się poniżej limitu.",
     "LockEquipped": "Założone",
     "LockItem": "Zablokuj przedmiot",
-    "LockPerk": "Wybierz modyfikację lub perk",
+    "LockPerk": "Select energy or perk",
     "NewEmptyLoadout": "Utwórz Puste Uzbrojenie",
     "NoBuildsFound": "Nie znaleziono zestawu. Spróbuj rozszerzyć kryteria filtrowania.",
     "NumStatMixes": "{{count, number}} miksy statystyk",
@@ -623,11 +652,10 @@
     "WeaponsOnly": "Broń"
   },
   "Manifest": {
-    "Build": "Budowanie bazy danych Destiny",
-    "Download": "Pobieranie najnowszych informacji o Destiny od Bungie",
-    "Error": "Błąd wczytywania informacji o Destiny:\n{{error}}\nOdśwież żeby spróbować ponownie.",
-    "Load": "Wczytywanie zapisanych informacji Destiny",
-    "Outdated": "Nieaktualne informacje Destiny",
+    "Download": "Downloading latest Destiny info database from Bungie...",
+    "Error": "Error loading Destiny info database:\n{{error}}\nReload to retry.",
+    "Load": "Loading Destiny info database...",
+    "Outdated": "Outdated Destiny info database",
     "OutdatedExplanation": "Bungie zaktualizowało swoją bazę danych informacji Destiny. Załaduj ponownie DIM, aby odebrać nowe informacje. Pamiętaj, że niektóre rzeczy w DIM mogą nie działać przez kilka godzin po aktualizacji Destiny przez Bungie, podczas gdy nowe dane rozprzestrzeniają się w ich systemach."
   },
   "Milestone": {
@@ -694,8 +722,43 @@
     "BulkMove": "Przenieś do",
     "BulkMoveLoadoutName": "Wybrane w organizatorze",
     "BulkTag": "Tag",
+    "Columns": {
+      "Archetype": "Archetype",
+      "BaseStats": "Base Stats",
+      "CustomTotal": "Custom Total",
+      "Damage": "Damage",
+      "Element": "Element",
+      "Energy": "Energy",
+      "Event": "Event",
+      "Icon": "Icon",
+      "KillTracker": "Kill Tracker",
+      "Loadouts": "Loadouts",
+      "MasterworkStat": "Masterwork Stat",
+      "MasterworkTier": "Masterwork Tier",
+      "ModSlot": "Mod Slot",
+      "Mods": "Mods",
+      "Name": "Name",
+      "Notes": "Notes",
+      "Perks": "Perks",
+      "Rating": "Rating",
+      "Reacquireable": "Reacquireable",
+      "Season": "Season",
+      "Source": "Source",
+      "Stats": "Stats",
+      "Tag": "Tag",
+      "Tier": "Tier",
+      "WishList": "Wish List",
+      "WishListNotes": "Wish List Notes",
+      "Year": "Year"
+    },
     "EnabledColumns": "Włączone kolumny",
-    "Organizer": "Organizator"
+    "Lock": "Lock",
+    "NoMobile": "This view isn't great on mobile.",
+    "Organizer": "Organizator",
+    "SelectAll": "Select All",
+    "SelectItem": "Select or unselect {{name}}",
+    "ShiftTip": "Tip: Hold the Shift key and click on a cell",
+    "Unlock": "Unlock"
   },
   "Progress": {
     "Bounties": "Zlecenia",
@@ -880,11 +943,6 @@
     "TagItems": "Otaguj przedmioty",
     "UnlockAll": "Odblokuj Przedmioty"
   },
-  "TrialsCard": {
-    "FiveWins": "Nagroda za 5 wygranych (Zbroja)",
-    "Flawless": "Bez skazy",
-    "SevenWins": "Nagroda za 7 wygranych (Zbroja)"
-  },
   "Triumphs": {
     "HideCompleted": "Ukryj zakończone",
     "RevealRedacted": "Odsłoń ukryte"
@@ -901,8 +959,7 @@
     "DestinySets": "Przeglądaj więcej zestawów przedmiotów na Destiny Sets",
     "Engram": "Nagroda - Engram",
     "FilterToUnacquired": "Pokazuje tylko niezdobyte przedmioty",
-    "Vendors": "Sprzedawcy",
-    "Year2Mods": "Modyfikacje z 2 Roku"
+    "Vendors": "Sprzedawcy"
   },
   "Views": {
     "About": {
@@ -963,6 +1020,7 @@
     "ExternalSource": "Opcjonalnie, podaj adres URL listy życzeń",
     "Header": "Lista Życzeń",
     "Import": "Wczytaj Rolle z Listy Życzeń",
+    "ImportError": "Error loading wish list: {{error}}",
     "ImportFailed": "Nie odnaleziono informacji z listy życzeń.",
     "ImportNoFile": "Nie wybrano pliku.",
     "ImportSuccess": "Wczytano listę życzeń z informacją o jednym rollu.{{titleAndDescription}}",

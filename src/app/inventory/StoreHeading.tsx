@@ -53,9 +53,9 @@ export default class StoreHeading extends React.Component<Props, State> {
       <AppIcon className="loadout-button" icon={openDropdownIcon} title={t('Loadouts.Loadouts')} />
     );
     const background = (
-      <div className="background" style={{ backgroundImage: `url(${store.background})` }} />
+      <div className="background" style={{ backgroundImage: `url("${store.background}")` }} />
     );
-    const emblem = <div className="emblem" style={{ backgroundImage: `url(${store.icon})` }} />;
+    const emblem = <div className="emblem" style={{ backgroundImage: `url("${store.icon}")` }} />;
 
     // TODO: break up into some pure components
 
@@ -108,7 +108,9 @@ export default class StoreHeading extends React.Component<Props, State> {
               </div>
               <div className="bottom">
                 <div className="race-gender">{store.genderRace}</div>
-                {store.isDestiny1() && <div className="level">{store.level}</div>}
+                {store.isDestiny1() && store.level < 40 && (
+                  <div className="level">{store.level}</div>
+                )}
               </div>
             </div>
             {loadoutButton}

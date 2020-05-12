@@ -5,10 +5,17 @@
   },
   "Accounts": {
     "Blizzard": "PC",
+    "ErrorLoadInventory": "No se pudieron cargar tus personajes de Destiny y tu inventario",
+    "ErrorLoadManifest": "No se pudo cargar información de la base de datos de Destiny desde Bungie",
+    "ErrorLoading": "No se pudieron cargr cuentas de Destiny desde Bungie.net",
+    "MissingDescription": "La cuenta que estás intentando ver no es una cuenta vinculada a tu perfil de Bungie.net.",
+    "MissingTitle": "Cuenta no encontrada",
     "NoCharacters": "No tiene ningún personaje de Destiny asociado a esta cuenta de Bungie.net. Trate de iniciar sesión en una cuenta diferente.",
     "PlayStation": "PS4",
     "Stadia": "Stadia",
     "Steam": "Steam",
+    "UnlinkTwitch": "Vincular tu cuenta de Twitch a Bungie.net causará que tus cuentas de Destiny 1 dejen de funcionar.",
+    "UnlinkTwitchButton": "Desvincular Twitch",
     "Xbox": "XB1"
   },
   "Activities": {
@@ -135,6 +142,9 @@
   },
   "ErrorBoundary": {
     "Title": "Algo fue mal"
+  },
+  "ErrorPanel": {
+    "Description": "Esto probablemente sea un problema que afecta a todas las aplicaciones de terceros. Comprube a a ver si Bungie.net carga o la Aplicación del Acompañante de Destiny 2 funciona."
   },
   "FarmingMode": {
     "D2Desc": "DIM está impidiendo que los objetos vayan a Administración asegurándose de que siempre hay un espacio libre por tipo de objeto en {{store}}. Se están moviendo objetos al depósito para hacer espacio.",
@@ -433,6 +443,10 @@
   },
   "LB": {
     "AdvancedOptions": "Opciones avanzadas",
+    "Chest": "Cofre",
+    "ChooseAMod": "Elige tus modificadores",
+    "ChooseAPerk": "Elige una ventaja",
+    "ClassItem": "Objeto de Clase",
     "ClearLocked": "Quitar bloqueo",
     "ContainsVendorItems": "Esta equipación contiene objetos de vendedores",
     "Current": "Actual",
@@ -440,6 +454,9 @@
     "Exclude": "Objetos excluidos",
     "ExcludeHelp": "SHIFT+CLICK en un objeto (o arrástralo y suéltalo en esta caja) para crear un conjunto sin equipo específico.",
     "FilterSets": "Conjuntos de filtros",
+    "Gauntlets": "Guantes",
+    "General": "General",
+    "Helmet": "Casco",
     "Help": {
       "And": "Armaduras con todas éstas ventajas serán usadas (\"y\")",
       "ChangeNodes": "Cambia los nodos de Intelecto, Disciplina y Fuerza en el juego a lo que se muestra para crear cada equipo.",
@@ -461,6 +478,7 @@
     "HideAllConfigs": "Ocultar todas las configuraciones",
     "HideConfigs": "Ocultar configuraciones",
     "LB": "Optimizador de Equipaciones",
+    "Legs": "Piernas",
     "LightMode": {
       "HelpCurrent": "Calcula las equipaciones con los niveles de defensa actuales.",
       "HelpScaled": "Calcula lás equipaciones como si todos los objetos tuvieran 350 de defensa.",
@@ -472,6 +490,7 @@
     "Locked": "Objetos bloqueados",
     "LockedHelp": "Arrastrar y soltar cualquier objeto en su caja para crear conjunto con ese equipamiento específico. SHIFT+CLICK para excluir objetos.",
     "Missing2": "¡Faltan piezas raras, legendarias o exóticas para crear un conjunto completo!",
+    "ModLockButton": "Selecciona modificadores",
     "ProcessingMode": {
       "Fast": "Rápido",
       "Full": "Completo",
@@ -480,10 +499,20 @@
       "ProcessingMode": "Modo de procesamiento"
     },
     "Scaled": "Escalado",
+    "SearchAMod": "Busca un modificador o descripción",
+    "Seasonal": "De Temporada",
     "ShowAllConfigs": "Mostrar todas las configuraciones",
     "ShowConfigs": "Mostrar configuraciones",
     "ShowGear": "{{class}} Armadura",
     "Vendor": "Incluir objetos de vendedores"
+  },
+  "Loading": {
+    "Accounts": "Cargando cuentas de Destiny...",
+    "AuditLog": "Cargando historial de Sincronización DIM...",
+    "Code": "Cargando código de DIM...",
+    "FilterHelp": "Cargando ayuda de búsqueda...",
+    "Profile": "Cargando perfil de Destiny...",
+    "Vendors": "Cargando comerciantes de Destiny..."
   },
   "LoadoutBuilder": {
     "AltPerkKey": "Elige esta ventaja para mostrar las estadísticas",
@@ -507,7 +536,7 @@
     "LimitedCombos": "Tienes {{combosWithoutCaps, number}} combinaciones de estadísticas posibles, pero sólo miramos a {{combos, number}} de ellas para evitar que DIM se bloquee. Como resultado, algunas posibilidades no se mostrarán. Bloquea algunos objetos o ventajas o desmonta alguna armadura antigua para mantenerte por debajo del límite.",
     "LockEquipped": "Equipado",
     "LockItem": "Bloquear objeto",
-    "LockPerk": "Selecciona modificador o ventaja",
+    "LockPerk": "Selecciona elemento o ventaja",
     "NewEmptyLoadout": "Crear Equipación Vacía",
     "NoBuildsFound": "No se encontraron equipaciones. Intenta expandir tus criterios de filtrado.",
     "NumStatMixes": "{{count, number}} mezcla de estadísticas",
@@ -623,11 +652,10 @@
     "WeaponsOnly": "Armas"
   },
   "Manifest": {
-    "Build": "Creando información de la base de datos de Destiny",
-    "Download": "Descargando la información más actualizada de Destiny desde Bungie",
-    "Error": "Error cargando información de Destiny:\n{{error}}\nCarga de nuevo para volver a intentarlo.",
-    "Load": "Cargando información de Destiny guardada",
-    "Outdated": "Información de Destiny obsoleta",
+    "Download": "Descargando la última información de la base de datos desde Bungie...",
+    "Error": "Error cargando información de la base de datos de Destiny:\n{{error}}\nRecarga para reintentar.",
+    "Load": "Cargando información de la base de datos de Destiny...",
+    "Outdated": "Información de la base de datos de Destiny desactualizada",
     "OutdatedExplanation": "Bungie ha actualizado su información de base de datos de Destiny. Recarga DIM para cargar la información nueva. Toma en cuenta que puede que DIM no funcione por algunas horas después de que Bungie actualiza Destiny, mientras que los nuevos datos se propagan por sus sistemas."
   },
   "Milestone": {
@@ -694,8 +722,43 @@
     "BulkMove": "Mover A",
     "BulkMoveLoadoutName": "Seleccionado en el Organizador",
     "BulkTag": "Etiqueta",
+    "Columns": {
+      "Archetype": "Arquetipo",
+      "BaseStats": "Estadísticas Base",
+      "CustomTotal": "Total Personalizado",
+      "Damage": "Daño",
+      "Element": "Elemento",
+      "Energy": "Energía",
+      "Event": "Evento",
+      "Icon": "Icono",
+      "KillTracker": "Contador de Bajas",
+      "Loadouts": "Equipaciones",
+      "MasterworkStat": "Estadística Obra Maestra",
+      "MasterworkTier": "Nivel de Obra Maestra",
+      "ModSlot": "Espacio para Modificador",
+      "Mods": "Modificadores",
+      "Name": "Nombre",
+      "Notes": "Notas",
+      "Perks": "Ventajas",
+      "Rating": "Calificación",
+      "Reacquireable": "Readquirible",
+      "Season": "Temporada",
+      "Source": "Fuente",
+      "Stats": "Estadísticas",
+      "Tag": "Etiqueta",
+      "Tier": "Nivel",
+      "WishList": "Lista de Deseos",
+      "WishListNotes": "Notas de la Lista de Deseos",
+      "Year": "Año"
+    },
     "EnabledColumns": "Columnas Habilitadas",
-    "Organizer": "Organizador"
+    "Lock": "Bloquear",
+    "NoMobile": "Esta vista no es mejor en el móvil.",
+    "Organizer": "Organizador",
+    "SelectAll": "Seleccionar Todo",
+    "SelectItem": "Seleccionar o deseleccionar {{name}}",
+    "ShiftTip": "Consejo: Mantén la tecla Shift y haz click en una celda",
+    "Unlock": "Desbloquear"
   },
   "Progress": {
     "Bounties": "Contratos",
@@ -880,11 +943,6 @@
     "TagItems": "Etiquetar objetos",
     "UnlockAll": "Desbloquear objetos"
   },
-  "TrialsCard": {
-    "FiveWins": "Recompensa de 5 victorias (Armadura)",
-    "Flawless": "Impecable",
-    "SevenWins": "Recompensa de 7 victorias (Arma)"
-  },
   "Triumphs": {
     "HideCompleted": "Esconder Completados",
     "RevealRedacted": "Revelar Clasificados"
@@ -901,8 +959,7 @@
     "DestinySets": "Navega más lotes de objetos en Destiny Sets",
     "Engram": "Engrama de Recompensa",
     "FilterToUnacquired": "Mostrar sólo objetos no coleccionados",
-    "Vendors": "Comerciantes",
-    "Year2Mods": "Modificadores Año 2"
+    "Vendors": "Comerciantes"
   },
   "Views": {
     "About": {
@@ -963,6 +1020,7 @@
     "ExternalSource": "Opcionalmente, proporcione la URL para una lista de deseos",
     "Header": "Lista de Deseos",
     "Import": "Cargar Tiradas de la Lista de Deseos",
+    "ImportError": "Error cargando la lista de deseos: {{error}}",
     "ImportFailed": "No se encontró información en la lista de deseos.",
     "ImportNoFile": "No hay archivo seleccionado.",
     "ImportSuccess": "Lista de deseos cargada con información sobre una tirada.{{titleAndDescription}}",

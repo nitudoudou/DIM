@@ -1,14 +1,17 @@
 import { HttpClientConfig } from 'bungie-api-ts/http';
 import { stringify } from 'simple-query-string';
-import { router } from 'app/router';
 import { getActiveToken as getBungieToken } from 'app/bungie-api/authenticated-fetch';
 import { dedupePromise } from 'app/utils/util';
+import store from 'app/store/store';
+import { needsDeveloper } from 'app/accounts/actions';
 
 const DIM_API_HOST = 'https://api.destinyitemmanager.com';
 export const API_KEY =
   $DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta'
     ? $DIM_API_KEY
     : localStorage.getItem('dimApiKey')!;
+
+const localStorageKey = 'dimApiToken';
 
 /**
  * Call one of the unauthenticated DIM APIs.
@@ -18,7 +21,6 @@ export async function unauthenticatedApi<T>(
   noApiKey?: boolean
 ): Promise<T> {
   if (!noApiKey && !API_KEY) {
-    router.stateService.go('developer');
     throw new Error('No DIM API key configured');
   }
 
@@ -51,7 +53,6 @@ export async function unauthenticatedApi<T>(
  */
 export async function authenticatedApi<T>(config: HttpClientConfig): Promise<T> {
   if (!API_KEY) {
-    router.stateService.go('developer');
     throw new Error('No DIM API key configured');
   }
 
@@ -61,24 +62,39 @@ export async function authenticatedApi<T>(config: HttpClientConfig): Promise<T> 
   if (config.params) {
     url = `${url}?${stringify(config.params)}`;
   }
+
+  const headers = {
+    Authorization: `Bearer ${token.accessToken}`,
+    'X-API-Key': API_KEY
+  };
+  if (config.body) {
+    headers['Content-Type'] = 'application/json';
+  }
+
   const response = await fetch(
     new Request(url, {
       method: config.method,
       body: config.body ? JSON.stringify(config.body) : undefined,
-      headers: config.body
-        ? {
-            Authorization: `Bearer ${token.accessToken}`,
-            'X-API-Key': API_KEY,
-            'Content-Type': 'application/json'
-          }
-        : {
-            Authorization: `Bearer ${token.accessToken}`,
-            'X-API-Key': API_KEY
-          }
+      headers
     })
   );
 
-  return response.json() as Promise<T>;
+  if (response.status === 401) {
+    // Delete our token
+    deleteDimApiToken();
+  }
+  if (response.ok) {
+    return response.json();
+  }
+
+  try {
+    const responseData = await response.json();
+    if (responseData.error) {
+      throw new Error(`${responseData.error}: ${responseData.message}`);
+    }
+  } catch {}
+
+  throw new Error('Failed to call DIM API: ' + response.status);
 }
 
 export interface DimAuthToken {
@@ -89,8 +105,6 @@ export interface DimAuthToken {
   /** A UTC epoch milliseconds timestamp representing when the token was acquired. */
   inception: number;
 }
-
-const localStorageKey = 'dimApiToken';
 
 /**
  * Get all token information from saved storage.
@@ -105,6 +119,10 @@ function getToken(): DimAuthToken | undefined {
  */
 function setToken(token: DimAuthToken) {
   localStorage.setItem(localStorageKey, JSON.stringify(token));
+}
+
+export function deleteDimApiToken() {
+  localStorage.removeItem(localStorageKey);
 }
 
 export interface AuthTokenRequest {
@@ -133,7 +151,7 @@ const refreshToken = dedupePromise(async () => {
     return authToken;
   } catch (e) {
     if (!($DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta')) {
-      router.stateService.go('developer');
+      store.dispatch(needsDeveloper()); // todo: pass in dispatch
       throw new Error('DIM API Key Incorrect');
     }
     throw e;

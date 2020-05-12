@@ -10,8 +10,6 @@ import { DimStore } from '../inventory/store-types';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { D2StoresService, mergeCollectibles } from '../inventory/d2-stores';
 import { loadingTracker } from '../shell/loading-tracker';
-import { UIViewInjectedProps } from '@uirouter/react';
-import { Loading } from '../dim-ui/Loading';
 import { Subscriptions } from '../utils/rx-utils';
 import { refresh$ } from '../shell/refresh';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
@@ -25,9 +23,15 @@ import { RootState, ThunkDispatchProp } from '../store/reducers';
 import { toVendor } from './d2-vendors';
 import styles from './SingleVendor.m.scss';
 import vendorStyles from './Vendor.m.scss';
+import { getCurrentStore } from 'app/inventory/stores-helpers';
+import { RouteComponentProps, withRouter } from 'react-router';
+import { parse } from 'simple-query-string';
+import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import { t } from 'app/i18next-t';
 
 interface ProvidedProps {
   account: DestinyAccount;
+  vendorHash: number;
 }
 
 interface StoreProps {
@@ -53,7 +57,7 @@ interface State {
   vendorResponse?: DestinyVendorResponse;
 }
 
-type Props = ProvidedProps & StoreProps & UIViewInjectedProps & ThunkDispatchProp;
+type Props = ProvidedProps & StoreProps & RouteComponentProps & ThunkDispatchProp;
 
 /**
  * A page that loads its own info for a single vendor, so we can link to a vendor or show engram previews.
@@ -90,17 +94,12 @@ class SingleVendor extends React.Component<Props, State> {
 
   render() {
     const { vendorResponse } = this.state;
-    const { account, buckets, ownedItemHashes, defs, profileResponse } = this.props;
+    const { account, buckets, ownedItemHashes, defs, profileResponse, vendorHash } = this.props;
 
     if (!defs || !buckets) {
-      return (
-        <div className="vendor dim-page">
-          <Loading />
-        </div>
-      );
+      return <ShowPageLoading message={t('Manifest.Load')} />;
     }
 
-    const vendorHash = this.getVendorHash();
     const vendorDef = defs.Vendor.get(vendorHash);
     if (!vendorDef) {
       throw new Error(`No known vendor with hash ${vendorHash}`);
@@ -172,12 +171,10 @@ class SingleVendor extends React.Component<Props, State> {
   }
 
   private async loadVendor() {
-    const { dispatch, defs } = this.props;
+    const { dispatch, defs, vendorHash } = this.props;
     if (!defs) {
       throw new Error('expected defs');
     }
-
-    const vendorHash = this.getVendorHash();
 
     const vendorDef = defs.Vendor.get(vendorHash);
     if (!vendorDef) {
@@ -189,11 +186,11 @@ class SingleVendor extends React.Component<Props, State> {
     if (vendorDef.returnWithVendorRequest) {
       // TODO: get for all characters, or let people select a character? This is a hack
       // we at least need to display that character!
-      let characterId: string = this.props.transition!.params().characterId;
+      let characterId = parse(location.search).characterId as string;
       if (!characterId) {
         const stores = this.props.stores;
         if (stores) {
-          characterId = stores.find((s) => s.current)!.id;
+          characterId = getCurrentStore(stores)!.id;
         }
       }
       const vendorResponse = await getVendorApi(this.props.account, characterId, vendorHash);
@@ -209,8 +206,6 @@ class SingleVendor extends React.Component<Props, State> {
       }
     }
   }
-
-  private getVendorHash = () => this.props.transition!.params().id;
 }
 
-export default connect<StoreProps>(mapStateToProps)(SingleVendor);
+export default withRouter(connect<StoreProps>(mapStateToProps)(SingleVendor));

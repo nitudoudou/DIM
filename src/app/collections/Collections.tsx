@@ -7,9 +7,7 @@ import './collections.scss';
 import { t } from 'app/i18next-t';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { D2StoresService } from '../inventory/d2-stores';
-import { UIViewInjectedProps } from '@uirouter/react';
 import Catalysts from './Catalysts';
-import { Loading } from '../dim-ui/Loading';
 import { connect } from 'react-redux';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import { RootState } from '../store/reducers';
@@ -18,8 +16,10 @@ import { storesSelector, profileResponseSelector } from '../inventory/selectors'
 import { refresh$ } from '../shell/refresh';
 import PresentationNodeRoot from './PresentationNodeRoot';
 import { useSubscription } from 'app/utils/hooks';
+import { useParams } from 'react-router';
+import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 
-interface ProvidedProps extends UIViewInjectedProps {
+interface ProvidedProps {
   account: DestinyAccount;
 }
 
@@ -27,7 +27,6 @@ interface StoreProps {
   buckets?: InventoryBuckets;
   defs?: D2ManifestDefinitions;
   ownedItemHashes: Set<number>;
-  presentationNodeHash?: number;
   profileResponse?: DestinyProfileResponse;
 }
 
@@ -46,11 +45,10 @@ function mapStateToProps() {
     return ownedItemHashes;
   });
 
-  return (state: RootState, ownProps: ProvidedProps): StoreProps => ({
+  return (state: RootState): StoreProps => ({
     buckets: state.inventory.buckets,
     defs: state.manifest.d2Manifest,
     ownedItemHashes: ownedItemHashesSelector(state),
-    presentationNodeHash: ownProps.transition?.params().presentationNodeHash,
     profileResponse: profileResponseSelector(state)
   });
 }
@@ -63,34 +61,25 @@ const refreshStores = () =>
 /**
  * The collections screen that shows items you can get back from the vault, like emblems and exotics.
  */
-function Collections({
-  account,
-  buckets,
-  ownedItemHashes,
-  transition,
-  defs,
-  profileResponse
-}: Props) {
+function Collections({ account, buckets, ownedItemHashes, defs, profileResponse }: Props) {
   useEffect(() => {
     D2StoresService.getStoresStream(account);
   }, [account]);
 
   useSubscription(refreshStores);
 
-  if (!profileResponse || !defs || !buckets) {
-    return (
-      <div className="vendor d2-vendors dim-page">
-        <Loading />
-      </div>
-    );
-  }
+  const { presentationNodeHashStr } = useParams();
+  const presentationNodeHash = presentationNodeHashStr
+    ? parseInt(presentationNodeHashStr, 10)
+    : undefined;
 
-  const presentationNodeHash = transition?.params().presentationNodeHash;
+  if (!profileResponse || !defs || !buckets) {
+    return <ShowPageLoading message={t('Loading.Profile')} />;
+  }
 
   const badgesRootNodeHash =
     profileResponse.profileCollectibles?.data?.collectionBadgesRootNodeHash;
   const metricsRootNodeHash = profileResponse.metrics?.data?.metricsRootNodeHash;
-  console.log(profileResponse, profileResponse.metrics?.data);
 
   return (
     <div className="vendor d2-vendors dim-page">

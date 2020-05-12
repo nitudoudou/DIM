@@ -1,6 +1,42 @@
 ## Next
 
+## 6.10.0 <span className="changelog-date">(2020-05-10)</span>
+
+## 6.9.0 <span className="changelog-date">(2020-05-03)</span>
+
+* In the Loadout Optimizer, mods have been split into their own menu, separate from perks.
+* Fixed a bug where wishlists would ignore settings and load the default wishlist instead.
+
+## 6.8.0 <span className="changelog-date">(2020-04-26)</span>
+
+* Added "armor 2.0" column to spreadsheet exports.
+* Fixed a bug that could affect the display of percentage-based objectives.
+
+## 6.7.0 <span className="changelog-date">(2020-04-19)</span>
+
+* Emblems now show a preview of their equipped stat tracker, and show which types of stat tracker the emblem can use.
+* Certain stat trackers (under "Metrics" in "Collections") had the wrong display value, like KDA. These have been fixed.
+* Loadout Optimizer now allows you to select seasonal mods independent of the gear they go on - it'll try to slot them into any gear.
+
+## 6.6.0 <span className="changelog-date">(2020-04-12)</span>
+
+* Better handling of logging out and into a different Bungie.net account.
+* Improved error handling for Bungie.net and DIM Sync issues.
+
+## 6.5.0 <span className="changelog-date">(2020-04-10)</span>
+
+* Improved overall performance and memory usage of DIM - as the game grows, so has DIM's memory usage. If your browser was crashing before, give it a try now.
+* Collectibles now show perks.
+
 ## 6.4.0 <span className="changelog-date">(2020-04-05)</span>
+
+* Added stat trackers to the Collections page (under "Metrics")
+* Improved error handling when Bungie.net is down or something is wrong with your account. Includes helpful tips for D1 users locked out by Twitch-linking bug. If your D1 accounts disappeared, they're in the menu now.
+* Accounts in the menu are now always ordered by last-played date.
+* DIM will no longer bounce you to a different account if the one you wanted cannot be loaded.
+* Fixed some bugs that could cause D1 pages to not display.
+* Fix display of collectibles that are tied to one of your alternate characters.
+* Fix the levels that reward Bright Engrams after season rank 100.
 
 ## 6.3.1 <span className="changelog-date">(2020-03-29)</span>
 

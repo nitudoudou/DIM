@@ -2,7 +2,6 @@ import React from 'react';
 import { t } from 'app/i18next-t';
 import clsx from 'clsx';
 import { DimItem, DimStat, D2Item } from '../inventory/item-types';
-import { router } from '../router';
 import _ from 'lodash';
 import { CompareService } from './compare.service';
 import { chainComparator, reverseComparator, compareBy } from '../utils/comparators';
@@ -31,13 +30,14 @@ import ElementIcon from 'app/inventory/ElementIcon';
 import { DimStore } from 'app/inventory/store-types';
 import { storesSelector } from 'app/inventory/selectors';
 import { getAllItems } from 'app/inventory/stores-helpers';
+import { RouteComponentProps, withRouter } from 'react-router';
 interface StoreProps {
   ratings: ReviewsState['ratings'];
   stores: DimStore[];
   defs?: D2ManifestDefinitions;
 }
 
-type Props = StoreProps;
+type Props = StoreProps & RouteComponentProps;
 
 function mapStateToProps(state: RootState): StoreProps {
   return {
@@ -76,7 +76,6 @@ class Compare extends React.Component<Props, State> {
     sortBetterFirst: true
   };
   private subscriptions = new Subscriptions();
-  private listener: Function;
 
   // Memoize computing the list of stats
   private getAllStatsSelector = createSelector(
@@ -86,10 +85,6 @@ class Compare extends React.Component<Props, State> {
   );
 
   componentDidMount() {
-    this.listener = router.transitionService.onExit({}, () => {
-      this.cancel();
-    });
-
     this.subscriptions.add(
       CompareService.compareItems$.subscribe((args) => {
         this.setState({ show: true });
@@ -100,8 +95,13 @@ class Compare extends React.Component<Props, State> {
     );
   }
 
+  componentDidUpdate(prevProps: Props) {
+    if (prevProps.location.pathname !== this.props.location.pathname) {
+      this.cancel();
+    }
+  }
+
   componentWillUnmount() {
-    this.listener();
     this.subscriptions.unsubscribe();
     CompareService.dialogOpen = false;
   }
@@ -125,8 +125,12 @@ class Compare extends React.Component<Props, State> {
       reverseComparator(
         chainComparator(
           compareBy((item: DimItem) => {
-            const dtrRating = getRating(item, ratings);
-            const showRating = dtrRating && shouldShowRating(dtrRating) && dtrRating.overallScore;
+            const dtrRating = $featureFlags.reviewsEnabled && getRating(item, ratings);
+            const showRating =
+              $featureFlags.reviewsEnabled &&
+              dtrRating &&
+              shouldShowRating(dtrRating) &&
+              dtrRating.overallScore;
 
             const stat =
               item.primStat && sortedHash === item.primStat.statHash
@@ -400,10 +404,7 @@ class Compare extends React.Component<Props, State> {
         buttonLabel: <>{[exampleItemElementIcon, exampleItemModSlot]}</>,
         items:
           hasEnergy(exampleItem) && exampleItemModSlot
-            ? allArmors
-                .filter(hasEnergy)
-                .filter(matchingModSlot)
-                .filter(matchesExample('element'))
+            ? allArmors.filter(hasEnergy).filter(matchingModSlot).filter(matchesExample('element'))
             : []
       },
 
@@ -492,9 +493,7 @@ class Compare extends React.Component<Props, State> {
       return intrinsic?.plug?.plugItem.hash || -99999999;
     };
       */
-    const getIntrinsicPerk: (item: D2Item) => DestinyInventoryItemDefinition | undefined = (
-      item
-    ) => {
+    const getIntrinsicPerk = (item: D2Item): DestinyInventoryItemDefinition | undefined => {
       const intrinsic =
         item.sockets &&
         item.sockets.sockets.find((s) =>
@@ -503,9 +502,9 @@ class Compare extends React.Component<Props, State> {
       return intrinsic?.plug?.plugItem;
     };
     const exampleItemRpm = getRpm(exampleItem);
-    const intrinsic = exampleItem.isDestiny2() && getIntrinsicPerk(exampleItem);
-    const intrinsicName = (intrinsic && intrinsic.displayProperties.name) || t('Compare.Archetype');
-    const intrinsicHash = intrinsic && intrinsic.hash;
+    const intrinsic = exampleItem.isDestiny2() ? getIntrinsicPerk(exampleItem) : undefined;
+    const intrinsicName = intrinsic?.displayProperties.name || t('Compare.Archetype');
+    const intrinsicHash = intrinsic?.hash;
 
     // minimum filter: make sure it's all weapons and the same weapon type
     allWeapons = allWeapons
@@ -683,4 +682,4 @@ function isDimStat(stat: DimStat | any): stat is DimStat {
   return Object.prototype.hasOwnProperty.call(stat as DimStat, 'smallerIsBetter');
 }
 
-export default connect<StoreProps>(mapStateToProps)(Compare);
+export default withRouter(connect<StoreProps>(mapStateToProps)(Compare));

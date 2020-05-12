@@ -25,12 +25,13 @@ import { createSelector } from 'reselect';
 import { storesSelector, profileResponseSelector } from 'app/inventory/selectors';
 import { RootState } from 'app/store/reducers';
 import { connect } from 'react-redux';
-import { itemsForPlugSet } from 'app/collections/PresentationNodeRoot';
+import { itemsForPlugSet } from 'app/collections/plugset-helpers';
 import { escapeRegExp } from 'app/search/search-filters';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { SocketDetailsMod, plugIsInsertable } from 'app/item-popup/SocketDetails';
 import { settingsSelector } from 'app/settings/reducer';
 import { chainComparator, compareBy } from 'app/utils/comparators';
+import { isArmor2Mod } from 'app/utils/item-utils';
 
 // to-do: separate mod name from its "enhanced"ness, maybe with d2ai? so they can be grouped better
 export const sortMods = chainComparator<DestinyInventoryItemDefinition>(
@@ -193,7 +194,8 @@ function mapStateToProps() {
             (i) =>
               i.item.inventory.tierType !== TierType.Common &&
               (!i.item.itemCategoryHashes || !i.item.itemCategoryHashes.includes(56)) &&
-              i.item.collectibleHash
+              i.item.collectibleHash &&
+              !isArmor2Mod(i.item)
           )
           .sort((a, b) => sortMods(a.item, b.item));
       });
@@ -255,7 +257,7 @@ class PerkPicker extends React.Component<Props, State> {
 
     const header = (
       <div>
-        <h1>Choose a perk</h1>
+        <h1>{t('LB.ChooseAPerk')}</h1>
         <div className="item-picker-search">
           <div className="search-filter" role="search">
             <AppIcon icon={searchIcon} />
@@ -345,7 +347,11 @@ class PerkPicker extends React.Component<Props, State> {
                           }
                           defs={defs}
                           lockedItem={lockedItem}
-                          onClick={() => this.onPerkSelected(lockedItem, lockedItem.bucket)}
+                          onClick={() => {
+                            if (lockedItem.bucket) {
+                              this.onPerkSelected(lockedItem, lockedItem.bucket);
+                            }
+                          }}
                         />
                       ))}
                     </React.Fragment>
@@ -419,8 +425,10 @@ class PerkPicker extends React.Component<Props, State> {
     onClose();
   };
 
-  private scrollToBucket = (bucketId: number) => {
-    const elem = document.getElementById(`perk-bucket-${bucketId}`)!;
+  private scrollToBucket = (bucketIdOrSeasonal: number | string) => {
+    const elementId =
+      bucketIdOrSeasonal === 'seasonal' ? bucketIdOrSeasonal : `perk-bucket-${bucketIdOrSeasonal}`;
+    const elem = document.getElementById(elementId)!;
     elem?.scrollIntoView();
   };
 }

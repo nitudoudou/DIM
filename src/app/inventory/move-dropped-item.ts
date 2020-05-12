@@ -11,6 +11,9 @@ import { showNotification } from '../notifications/notifications';
 import { Subject } from 'rxjs';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { moveItemNotification } from './MoveNotifications';
+import { getStore } from './stores-helpers';
+import rxStore from '../store/store';
+import { updateCharacters } from './d2-stores';
 
 export interface MoveAmountPopupOptions {
   item: DimItem;
@@ -56,6 +59,8 @@ export default queuedAction(
       let moveAmount = item.amount || 1;
 
       try {
+        const stores = item.getStoresService().getStores();
+
         // Select how much of a stack to move
         if (
           item.maxStackSize > 1 &&
@@ -64,10 +69,7 @@ export default queuedAction(
           !item.uniqueStack &&
           forceChooseAmount
         ) {
-          const maximum = item
-            .getStoresService()
-            .getStore(item.owner)!
-            .amountOfItem(item);
+          const maximum = getStore(stores, item.owner)!.amountOfItem(item);
 
           try {
             moveAmount = await showMoveAmountPopup(item, target, maximum);
@@ -87,7 +89,7 @@ export default queuedAction(
             'to',
             target.name,
             'from',
-            item.getStoresService().getStore(item.owner)!.name
+            getStore(stores, item.owner)!.name
           );
         }
 
@@ -102,7 +104,7 @@ export default queuedAction(
 
         const reload = item.equipped || equip;
         if (reload) {
-          await item.getStoresService().updateCharacters();
+          await (rxStore.dispatch(updateCharacters()) as any);
         }
 
         item.updateManualMoveTimestamp();

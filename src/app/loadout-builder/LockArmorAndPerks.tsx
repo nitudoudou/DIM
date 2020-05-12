@@ -11,7 +11,10 @@ import {
   ItemsByBucket,
   LockedPerk,
   LockedMap,
-  LockedMod
+  LockedMod,
+  LockedArmor2ModMap,
+  LockedArmor2Mod,
+  ModPickerCategories
 } from './types';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
@@ -28,12 +31,16 @@ import styles from './LockArmorAndPerks.m.scss';
 import LockedItem from './LockedItem';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingsSelector } from 'app/settings/reducer';
+import LockedArmor2ModIcon from './LockedArmor2ModIcon';
+import ModPicker from './ModPicker';
 
 interface ProvidedProps {
   selectedStore: DimStore;
   items: ItemsByBucket;
   lockedMap: LockedMap;
+  lockedArmor2Mods: LockedArmor2ModMap;
   onLockedMapChanged(lockedMap: ProvidedProps['lockedMap']): void;
+  onArmor2ModsChanged(mods: LockedArmor2ModMap): void;
 }
 
 interface StoreProps {
@@ -63,13 +70,16 @@ function LockArmorAndPerks({
   selectedStore,
   defs,
   lockedMap,
+  lockedArmor2Mods,
   items,
   buckets,
   stores,
   isPhonePortrait,
-  onLockedMapChanged
+  onLockedMapChanged,
+  onArmor2ModsChanged
 }: Props) {
   const [filterPerksOpen, setFilterPerksOpen] = useState(false);
+  const [filterModsOpen, setFilterModsOpen] = useState(false);
 
   /**
    * Lock currently equipped items on a character
@@ -124,16 +134,29 @@ function LockArmorAndPerks({
   };
 
   const addLockedItemType = (item: LockedItemType) => {
-    onLockedMapChanged({
-      ...lockedMap,
-      [item.bucket.hash]: addLockedItem(item, lockedMap[item.bucket.hash])
-    });
+    if (item.bucket) {
+      onLockedMapChanged({
+        ...lockedMap,
+        [item.bucket.hash]: addLockedItem(item, lockedMap[item.bucket.hash])
+      });
+    }
   };
 
   const removeLockedItemType = (item: LockedItemType) => {
-    onLockedMapChanged({
-      ...lockedMap,
-      [item.bucket.hash]: removeLockedItem(item, lockedMap[item.bucket.hash])
+    if (item.bucket) {
+      onLockedMapChanged({
+        ...lockedMap,
+        [item.bucket.hash]: removeLockedItem(item, lockedMap[item.bucket.hash])
+      });
+    }
+  };
+
+  const onArmor2ModClicked = (item: LockedArmor2Mod) => {
+    onArmor2ModsChanged({
+      ...lockedArmor2Mods,
+      [item.category]: lockedArmor2Mods[item.category]?.filter(
+        (ex) => ex.mod.hash !== item.mod.hash
+      )
     });
   };
 
@@ -160,6 +183,11 @@ function LockArmorAndPerks({
     _.sortBy(items, (i: LockedItemCase) => order.indexOf(i.bucket.hash))
   );
 
+  const modOrder = Object.values(ModPickerCategories);
+  const flatLockedArmor2Mods: LockedArmor2Mod[] = modOrder
+    .flatMap((category) => lockedArmor2Mods[category])
+    .filter(Boolean);
+
   const storeIds = stores.filter((s) => !s.isVault).map((s) => s.id);
   const bucketTypes = buckets.byCategory.Armor.map((b) => b.type!);
   const ghostType = buckets.byHash[LockableBuckets.ghost].type;
@@ -176,7 +204,7 @@ function LockArmorAndPerks({
           <div className={styles.itemGrid}>
             {(flatLockedMap.mod || []).map((lockedItem: LockedMod) => (
               <LockedItem
-                key={`${lockedItem.bucket.hash}.${lockedItem.mod.hash}`}
+                key={`${lockedItem.bucket?.hash}.${lockedItem.mod.hash}`}
                 lockedItem={lockedItem}
                 defs={defs}
                 onRemove={removeLockedItemType}
@@ -184,7 +212,7 @@ function LockArmorAndPerks({
             ))}
             {(flatLockedMap.perk || []).map((lockedItem: LockedPerk) => (
               <LockedItem
-                key={`${lockedItem.bucket.hash}.${lockedItem.perk.hash}`}
+                key={`${lockedItem.bucket?.hash}.${lockedItem.perk.hash}`}
                 lockedItem={lockedItem}
                 defs={defs}
                 onRemove={removeLockedItemType}
@@ -212,6 +240,35 @@ function LockArmorAndPerks({
                 lockedMap={lockedMap}
                 onClose={() => setFilterPerksOpen(false)}
                 onPerksSelected={onLockedMapChanged}
+              />,
+              document.body
+            )}
+        </div>
+      </div>
+      <div className={styles.area}>
+        {Boolean(flatLockedArmor2Mods.length) && (
+          <div className={styles.itemGrid}>
+            {flatLockedArmor2Mods.map((item) => (
+              <LockedArmor2ModIcon
+                key={item.mod.hash}
+                item={item}
+                defs={defs}
+                onModClicked={() => onArmor2ModClicked(item)}
+              />
+            ))}
+          </div>
+        )}
+        <div className={styles.buttons}>
+          <button className="dim-button" onClick={() => setFilterModsOpen(true)}>
+            <AppIcon icon={addIcon} /> {t('LB.ModLockButton')}
+          </button>
+          {filterModsOpen &&
+            ReactDOM.createPortal(
+              <ModPicker
+                classType={selectedStore.classType}
+                lockedArmor2Mods={lockedArmor2Mods}
+                onClose={() => setFilterModsOpen(false)}
+                onArmor2ModsChanged={onArmor2ModsChanged}
               />,
               document.body
             )}

@@ -39,6 +39,7 @@ import { t } from 'app/i18next-t';
 import { dimErrorToaster } from 'app/bungie-api/error-toaster';
 import { refresh$ } from 'app/shell/refresh';
 import { getActiveToken as getBungieToken } from 'app/bungie-api/authenticated-fetch';
+import { compareAccounts } from 'app/accounts/destiny-account';
 
 const installApiPermissionObserver = _.once(() => {
   // Observe API permission and reflect it into local storage
@@ -67,7 +68,7 @@ const installObservers = _.once((dispatch: ThunkDispatch<RootState, {}, AnyActio
     (state) => state.dimApi,
     _.debounce((currentState: DimApiState, nextState: DimApiState) => {
       // Avoid writing back what we just loaded from IDB
-      if (currentState && currentState.profileLoadedFromIndexedDb) {
+      if (currentState?.profileLoadedFromIndexedDb) {
         // Only save the difference between the current and default settings
         const settingsToSave = subtractObject(nextState.settings, initialSettingsState) as Settings;
 
@@ -94,9 +95,9 @@ const installObservers = _.once((dispatch: ThunkDispatch<RootState, {}, AnyActio
 
   // Observe the current account and reload data
   // Another one that should probably be a thunk action once account transitions are actions
-  observeStore(currentAccountSelector, (oldAccount) => {
+  observeStore(currentAccountSelector, (oldAccount, newAccount) => {
     // Force load profile data if the account changed
-    if (oldAccount) {
+    if (oldAccount && newAccount && !compareAccounts(oldAccount, newAccount)) {
       dispatch(loadDimApiData(true));
     }
   });
@@ -121,6 +122,14 @@ export function loadGlobalSettings(): ThunkResult {
       }
     }
   };
+}
+
+/**
+ * Wait, with exponential backoff - we'll try infinitely otherwise, in a tight loop!
+ * Double the wait time, starting with 10 seconds, until we reach 5 minutes.
+ */
+function getBackoffWaitTime(backoff: number) {
+  return Math.min(5 * 60 * 1000, Math.random() * Math.pow(2, backoff) * 5000);
 }
 
 // Backoff multiplier
@@ -218,10 +227,9 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
 
         console.error('[loadDimApiData] Unable to get profile from DIM API', e);
 
-        // Wait, with exponential backoff - we'll try infinitely otherwise, in a tight loop!
-        // Double the wait time, starting with 5 seconds, until we reach 5 minutes.
+        // Wait, with exponential backoff
         getProfileBackoff++;
-        const waitTime = Math.min(5 * 60 * 1000, Math.pow(2, getProfileBackoff) * 2500);
+        const waitTime = getBackoffWaitTime(getProfileBackoff);
         console.log('[loadDimApiData] Waiting', waitTime, 'ms before re-attempting profile fetch');
         await delay(waitTime);
 
@@ -290,10 +298,9 @@ export function flushUpdates(): ThunkResult<any> {
         }
         console.error('[flushUpdates] Unable to save updates to DIM API', e);
 
-        // Wait, with exponential backoff - we'll try infinitely otherwise, in a tight loop!
-        // Double the wait time, starting with 5 seconds, until we reach 5 minutes.
+        // Wait, with exponential backoff
         flushUpdatesBackoff++;
-        const waitTime = Math.min(5 * 60 * 1000, Math.pow(2, flushUpdatesBackoff) * 2500);
+        const waitTime = getBackoffWaitTime(getProfileBackoff);
         console.log('[flushUpdates] Waiting', waitTime, 'ms before re-attempting updates');
         await delay(waitTime);
 
